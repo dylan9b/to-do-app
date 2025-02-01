@@ -1,0 +1,57 @@
+<section
+  class="flex flex-col gap-2 items-center justify-center h-screen z-[1] relative bg-no-repeat bg-cover bg-center p-4"
+>
+  <h1 class="text-white font-extrabold text-[3rem]">Login</h1>
+  <form
+    [formGroup]="form"
+    class="flex flex-col gap-7 p-8 w-[25%]"
+    (ngSubmit)="onSubmit()"
+  >
+    <fieldset class="relative flex items-center">
+      <input
+        matInput
+        placeholder="Email"
+        formControlName="email"
+        class="w-full p-4 rounded-[2rem] focus-within:shadow-lg focus-within:shadow-orange-800"
+      />
+    </fieldset>
+
+    <fieldset class="relative flex items-center">
+      <input
+        matInput
+        formControlName="password"
+        [type]="hidePasswordSignal() ? 'password' : 'text'"
+        class="w-full p-4 rounded-[2rem] focus-within:shadow-lg focus-within:shadow-orange-800"
+      />
+      <button
+        class="!absolute right-4"
+        mat-icon-button
+        matSuffix
+        (click)="togglePassword($event)"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hidePasswordSignal()"
+      >
+        <mat-icon>{{
+          hidePasswordSignal() ? "visibility_off" : "visibility"
+        }}</mat-icon>
+      </button>
+    </fieldset>
+
+    <fieldset>
+      <mat-checkbox> Remember Me </mat-checkbox>
+    </fieldset>
+
+    <button
+      class="submit p-4 rounded-[2rem] font-bold text-white bg-teal-950 hover:bg-white hover:text-teal-950"
+      type="submit"
+    >
+      Login
+    </button>
+
+    <small class="flex items-center justify-center">
+      <a [routerLink]="['/auth', 'register']" class="text-white font-semibold"
+        >Don't have an account?</a
+      >
+    </small>
+  </form>
+</section>
