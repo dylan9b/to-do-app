@@ -52,12 +52,26 @@ export class LoginComponent extends AuthComponent {
         .login$(request)
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((response) => {
+          const expireDate = new Date(response?.data?.expiryDate);
+
+          const utcExpireDate = new Date(
+            Date.UTC(
+              expireDate.getFullYear(),
+              expireDate.getMonth(),
+              expireDate.getDate(),
+              expireDate.getHours(),
+              expireDate.getMinutes(),
+              expireDate.getSeconds()
+            )
+          );
+
           this._cookieService.set(
             'accessToken',
-            response.data.accessToken,
-            new Date(response.data.expiryDate),
+            response?.data?.accessToken,
+            utcExpireDate,
             '/'
           );
+
           this._router.navigate(['/todos']);
         });
     }

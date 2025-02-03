@@ -1,5 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { selectAllTodos } from '../state/selectors';
+import { TodosActions } from '../state/actions';
+import { AppState } from '../state/app.state';
 
 @Component({
   selector: 'app-todos',
@@ -9,5 +13,11 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
 })
 export class TodosComponent {
-  newTodo: string | undefined;
+  private readonly _store = inject(Store<AppState>);
+
+  todosSignal = this._store.selectSignal(selectAllTodos);
+
+  constructor() {
+    this._store.dispatch(TodosActions.load({ request: null }));
+  }
 }
