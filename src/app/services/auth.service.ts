@@ -13,27 +13,32 @@ export class AuthService {
   private readonly _http = inject(HttpClient);
 
   login$(request: AuthRequestModel): Observable<LoginResponseModel> {
-    return this._http.post<LoginResponseModel>(`${environment.apiUrl}login.php`, { ...request })
+    return this._http
+      .post<LoginResponseModel>(`${environment.apiUrl}login.php`, {
+        ...request,
+      })
       .pipe(
         map((response) => {
           return response;
         }),
-        catchError(err => {
+        catchError((err) => {
           throw err;
         })
-      )
+      );
   }
 
   register$(request: AuthRequestModel): Observable<RegisterResponseModel> {
-    return this._http.post<LoginResponseModel>(`${environment.apiUrl}register.php`, { ...request })
+    return this._http
+      .post<LoginResponseModel>(`${environment.apiUrl}register.php`, {
+        ...request,
+      })
       .pipe(
         map((response) => {
           return response;
         }),
-        catchError(err => {
+        catchError((err) => {
           throw err;
         })
-      )
+      );
   }
-
 }

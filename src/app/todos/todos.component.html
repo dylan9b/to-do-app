@@ -1,5 +1,7 @@
-<h1>TODOS</h1>
+<section>
+  <h1>TODOS</h1>
 
-@for(todo of todosSignal(); track todo?.id) {
-<p>{{ todo?.title }}</p>
-}
+  @for(todo of todosSignal(); track todo?.id) {
+    <app-todo-item [todoSignal]="todo"></app-todo-item>
+  }
+</section>

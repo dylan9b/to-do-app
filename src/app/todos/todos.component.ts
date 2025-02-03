@@ -4,10 +4,11 @@ import { Store } from '@ngrx/store';
 import { selectAllTodos } from '../state/selectors';
 import { TodosActions } from '../state/actions';
 import { AppState } from '../state/app.state';
+import { TodoItemComponent } from './todo-item/todo-item.component';
 
 @Component({
   selector: 'app-todos',
-  imports: [FormsModule],
+  imports: [FormsModule, TodoItemComponent],
   templateUrl: './todos.component.html',
   styleUrl: './todos.component.scss',
   standalone: true,

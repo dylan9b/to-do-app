@@ -1,3 +1,3 @@
-export interface DeleteTodoModel {
+export interface DeleteTodoRequestModel {
   id: string;
 }

@@ -1,0 +1,15 @@
+<article class="w-full flex flex-row items-center justify-between">
+  todoSignal().isCompleted: {{ todoSignal().isCompleted }}
+  <fieldset>
+    <mat-checkbox
+      [checked]="!!todoSignal().isCompleted"
+      (change)="onTaskToggle($event)"
+    >
+      <span [class.line-through]="todoSignal().isCompleted">{{
+        todoSignal().title
+      }}</span>
+    </mat-checkbox>
+  </fieldset>
+
+  <mat-icon (click)="removeTodo()">close</mat-icon>
+</article>

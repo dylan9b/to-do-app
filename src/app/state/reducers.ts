@@ -7,7 +7,7 @@ import { TodosActions } from './actions';
 export const initialState: TodoState = todosAdapter.getInitialState({
   error: null,
   status: STATUS.PENDING,
-  request: null
+  request: null,
 });
 
 export const todoReducer = createReducer(
@@ -29,6 +29,38 @@ export const todoReducer = createReducer(
     return updatedState;
   }),
   on(TodosActions.loadFailure, (state, { error }) => ({
+    ...state,
+    status: STATUS.ERROR,
+    error,
+  })),
+
+  // UPDATE TODO
+  on(TodosActions.update, (state) => ({
+    ...state,
+    status: STATUS.LOADING,
+  })),
+  on(TodosActions.updateSuccess, (state, { response }) => ({
+    ...state,
+    ...todosAdapter.updateOne(response, state),
+    status: STATUS.SUCCESS,
+  })),
+  on(TodosActions.updateFailure, (state, { error }) => ({
+    ...state,
+    status: STATUS.ERROR,
+    error,
+  })),
+
+  // DELETE TODO
+  on(TodosActions.delete, (state) => ({
+    ...state,
+    status: STATUS.LOADING,
+  })),
+  on(TodosActions.deleteSuccess, (state, { id }) => ({
+    ...state,
+    ...todosAdapter.removeOne(id, state),
+    status: STATUS.SUCCESS,
+  })),
+  on(TodosActions.deleteFailure, (state, { error }) => ({
     ...state,
     status: STATUS.ERROR,
     error,

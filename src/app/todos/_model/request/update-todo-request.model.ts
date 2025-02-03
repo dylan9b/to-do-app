@@ -3,6 +3,6 @@ export interface UpdateTodoRequestModel {
   priorityId: string;
   userId: string;
   title: string;
-  isCompleted: string;
+  isCompleted: boolean;
   dueDate: Date;
 }
