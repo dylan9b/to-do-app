@@ -35,6 +35,7 @@
           (click)="togglePassword($event)"
           [attr.aria-label]="'Hide password'"
           [attr.aria-pressed]="hidePasswordSignal()"
+          matRipple
         >
           <mat-icon>{{
             hidePasswordSignal() ? "visibility_off" : "visibility"

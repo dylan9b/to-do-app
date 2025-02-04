@@ -1,3 +1,5 @@
+@if(todoSignal()) {
+
 <article class="w-full flex flex-row items-center justify-between p-4 bg-white">
   <fieldset>
     <mat-checkbox
@@ -12,3 +14,4 @@
 
   <mat-icon class="deleteIcon" (click)="removeTodo()">close</mat-icon>
 </article>
+}

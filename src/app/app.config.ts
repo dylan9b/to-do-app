@@ -25,6 +25,8 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { priorityReducer } from './state/priority/priority.reducer';
 import { PriorityEffects } from './state/priority/priority.effects';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { DatePipe } from '@angular/common';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -47,7 +49,10 @@ export const appConfig: ApplicationConfig = {
     ),
     provideEffects([TodoEffects, PriorityEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-    
+    provideNativeDateAdapter(),
+
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+
+    DatePipe,
   ],
 };

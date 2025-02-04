@@ -1,4 +1,9 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+} from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -12,6 +17,7 @@ import { Router, RouterLink } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthComponent } from '../auth.component';
 import { AuthRequestModel } from '../_model/auth-request.model';
+import { MatRippleModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-login',
@@ -24,10 +30,12 @@ import { AuthRequestModel } from '../_model/auth-request.model';
     MatIconModule,
     MatCheckboxModule,
     RouterLink,
+    MatRippleModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent extends AuthComponent {
   private readonly _authService = inject(AuthService);
@@ -53,18 +61,6 @@ export class LoginComponent extends AuthComponent {
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((response) => {
           const expireDate = new Date(response?.data?.expiryDate);
-
-          // const utcExpireDate = new Date(
-          //   Date.UTC(
-          //     expireDate.getFullYear(),
-          //     expireDate.getMonth(),
-          //     expireDate.getDate(),
-          //     expireDate.getHours(),
-          //     expireDate.getMinutes(),
-          //     expireDate.getSeconds()
-          //   )
-          // );
-
           this._cookieService.set(
             'accessToken',
             response?.data?.accessToken,

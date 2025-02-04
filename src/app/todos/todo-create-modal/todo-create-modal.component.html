@@ -1,1 +1,43 @@
-<p>todo-create-modal works!</p>
+<button mat-icon-button mat-dialog-close type="button">
+  <mat-icon>close</mat-icon>
+</button>
+
+<mat-dialog-content class="mat-typography">
+  <h2 mat-dialog-title>Add new todo item</h2>
+  @if(form) {
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field class="w-full">
+      <mat-label>Title</mat-label>
+      <input matInput type="text" formControlName="title" />
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+      <mat-label>Due Date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="dueDate" />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+      <mat-label>Priority</mat-label>
+      <mat-select formControlName="priorityId">
+        @for (priorityItem of prioritiesSignal(); track priorityItem?.id) {
+        <mat-option [value]="priorityItem?.id">{{
+          priorityItem.priority
+        }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <button
+      class="w-full submit p-4 rounded-[2rem] font-bold text-white bg-teal-950 hover:bg-white border-1 hover:text-teal-950 hover:border-(bg-teal=950)"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+  }
+</mat-dialog-content>

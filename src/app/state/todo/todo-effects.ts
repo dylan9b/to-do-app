@@ -47,9 +47,7 @@ export class TodoEffects {
       ofType(todosActions.delete),
       switchMap((action) =>
         from(this._todoService.deleteTodo$(action?.id)).pipe(
-          map((response) => {
-            return todosActions.deleteSuccess({ id: response.id });
-          }),
+          map((response) => todosActions.deleteSuccess({ id: response.id })),
           catchError((error) => of(todosActions.deleteFailure({ error })))
         )
       )
@@ -61,9 +59,9 @@ export class TodoEffects {
       ofType(todosActions.create),
       switchMap((action) =>
         from(this._todoService.createTodo$(action?.request)).pipe(
-          map((response) => {
-            return todosActions.createSuccess({ response: response?.todo });
-          }),
+          map((response) =>
+            todosActions.createSuccess({ response: response?.todo })
+          ),
           catchError((error) => of(todosActions.createFailure({ error })))
         )
       )

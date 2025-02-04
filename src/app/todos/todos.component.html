@@ -2,7 +2,18 @@
   class="flex flex-col gap-2 items-center justify-center h-screen z-[1] relative bg-no-repeat bg-cover bg-center p-4"
 >
   <div class="w-full lg:w-1/4 flex flex-col">
-    <h1 class="text-white font-extrabold text-[3rem]">TODOS</h1>
+    <h1
+      class="text-white font-extrabold text-[3rem] flex flex-row items-center justify-between"
+    >
+      TODOS
+      <button
+        type="button"
+        class="flex items-center justify-center rounded-full bg-black text-white text-2xl p-4"
+        (click)="openCreateTodoModal()"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+    </h1>
 
     <div
       class="flex flex-col items-center justify-between gap-4 rounded-lg bg-white p-6 shadow-md outline outline-black/5 dark:bg-gray-800"

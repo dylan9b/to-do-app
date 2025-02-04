@@ -1,6 +1,5 @@
 export interface CreateTodoRequestModel {
   title: string;
-  isCompleted: boolean;
-  dueDate: Date;
-  priorityId: string;
+  dueDate?: string;
+  priorityId?: string;
 }
