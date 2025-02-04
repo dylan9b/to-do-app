@@ -1,5 +1,4 @@
-<article class="w-full flex flex-row items-center justify-between">
-  todoSignal().isCompleted: {{ todoSignal().isCompleted }}
+<article class="w-full flex flex-row items-center justify-between p-4 bg-white">
   <fieldset>
     <mat-checkbox
       [checked]="!!todoSignal().isCompleted"
@@ -11,5 +10,5 @@
     </mat-checkbox>
   </fieldset>
 
-  <mat-icon (click)="removeTodo()">close</mat-icon>
+  <mat-icon class="deleteIcon !hidden"(click)="removeTodo()">close</mat-icon>
 </article>

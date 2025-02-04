@@ -23,23 +23,19 @@ export class TodoItemComponent {
   todoSignal = input.required<TodoModel>();
 
   onTaskToggle(event: MatCheckboxChange): void {
-    if (this.todoSignal()) {
-      const request: Partial<UpdateTodoRequestModel> = {
-        id: this.todoSignal()?.id,
-        isCompleted: event?.checked,
-      };
+    const request: Partial<UpdateTodoRequestModel> = {
+      id: this.todoSignal()?.id,
+      isCompleted: event?.checked,
+    };
 
-      this._store.dispatch(
-        TodosActions.update({
-          request,
-        })
-      );
-    }
+    this._store.dispatch(
+      TodosActions.update({
+        request,
+      })
+    );
   }
 
   removeTodo(): void {
-    if (this.todoSignal()) {
-      this._store.dispatch(TodosActions.delete({ id: this.todoSignal()?.id }));
-    }
+    this._store.dispatch(TodosActions.delete({ id: this.todoSignal()?.id }));
   }
 }

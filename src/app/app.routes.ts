@@ -25,4 +25,9 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./todos/todos.component').then((m) => m.TodosComponent),
   },
+  {
+    path: '',
+    redirectTo: 'todos',
+    pathMatch: 'full',
+  },
 ];

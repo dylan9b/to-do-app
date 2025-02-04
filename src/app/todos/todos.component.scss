@@ -1,0 +1,9 @@
+:host {
+  ::ng-deep app-todo-item {
+    &:hover {
+      .deleteIcon {
+        display: block !important;
+      }
+    }
+  }
+}

@@ -54,21 +54,21 @@ export class LoginComponent extends AuthComponent {
         .subscribe((response) => {
           const expireDate = new Date(response?.data?.expiryDate);
 
-          const utcExpireDate = new Date(
-            Date.UTC(
-              expireDate.getFullYear(),
-              expireDate.getMonth(),
-              expireDate.getDate(),
-              expireDate.getHours(),
-              expireDate.getMinutes(),
-              expireDate.getSeconds()
-            )
-          );
+          // const utcExpireDate = new Date(
+          //   Date.UTC(
+          //     expireDate.getFullYear(),
+          //     expireDate.getMonth(),
+          //     expireDate.getDate(),
+          //     expireDate.getHours(),
+          //     expireDate.getMinutes(),
+          //     expireDate.getSeconds()
+          //   )
+          // );
 
           this._cookieService.set(
             'accessToken',
             response?.data?.accessToken,
-            utcExpireDate,
+            expireDate,
             '/'
           );
 
