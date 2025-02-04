@@ -1,7 +1,7 @@
 @if(todoSignal()) {
 
 <article class="w-full flex flex-row items-center justify-between p-4 bg-white">
-  <fieldset>
+  <fieldset class="flex-[2_1_0]">
     <mat-checkbox
       [checked]="!!todoSignal().isCompleted"
       (change)="onTaskToggle($event)"
@@ -12,6 +12,21 @@
     </mat-checkbox>
   </fieldset>
 
-  <mat-icon class="deleteIcon" (click)="removeTodo()">close</mat-icon>
+  <small class="flex-[2_1_0]">Due Date {{ todoSignal().dueDate | date : "shortDate" }}</small>
+
+  <button mat-icon-button class="flex-1" [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="removeTodo()">
+      <mat-icon >close</mat-icon>
+      <span>Delete</span>
+    </button>
+    <button mat-menu-item (click)="editTodo()">
+      <mat-icon>edit</mat-icon>
+      <span>Edit</span>
+    </button>
+  </mat-menu>
+  
 </article>
 }

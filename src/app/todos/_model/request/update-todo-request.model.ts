@@ -1,8 +1,8 @@
 export interface UpdateTodoRequestModel {
   id: string;
   priorityId: string;
-  userId: string;
+  userId?: string;
   title: string;
   isCompleted: boolean;
-  dueDate: Date;
+  dueDate: string;
 }

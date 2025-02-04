@@ -16,8 +16,15 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogModule,
+} from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
+import { TodoModel } from '../_model/todo.model';
+import { UpdateTodoRequestModel } from '../_model/request/update-todo-request.model';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-todo-create-modal',
@@ -30,6 +37,7 @@ import { DatePipe } from '@angular/common';
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
+    MatCheckboxModule,
   ],
   providers: [DatePipe],
   templateUrl: './todo-create-modal.component.html',
@@ -45,6 +53,8 @@ export class TodoCreateModalComponent {
 
   readonly prioritiesSignal = this._store.selectSignal(selectAllPriorities);
 
+  readonly data?: { todo?: TodoModel | null } = inject(MAT_DIALOG_DATA);
+
   form!: FormGroup;
 
   constructor() {
@@ -53,15 +63,31 @@ export class TodoCreateModalComponent {
 
   private populateFormControl(): FormGroup {
     const form = new TodoCreateModalFormControl();
+
+    if (this.data?.todo?.id) {
+      form.dueDate.setValue(this.data?.todo?.dueDate);
+      form.id.setValue(this.data?.todo?.id);
+      form.priorityId.setValue(this.data?.todo.priorityId);
+      form.title.setValue(this.data?.todo?.title);
+      form.isCompleted.setValue(this.data?.todo?.isCompleted);
+    }
+
     return this._formBuilder.group(form);
   }
 
   onSubmit(): void {
+    if (this.data?.todo?.id) {
+      this.updateTodo();
+    } else {
+      this.createTodo();
+    }
+
+    this._dialog.closeAll();
+  }
+
+  private createTodo(): void {
     const { dueDate, title, priorityId } = this.form.value;
-    const date = this._datePipe.transform(
-      dueDate,
-      'YYYY-MM-dd'
-    ) as string;
+    const date = this._datePipe.transform(dueDate, 'YYYY-MM-dd') as string;
 
     const request: CreateTodoRequestModel = {
       dueDate: date,
@@ -72,7 +98,22 @@ export class TodoCreateModalComponent {
     if (this.form.valid) {
       this._store.dispatch(todosActions.create({ request }));
     }
+  }
 
-    this._dialog.closeAll();
+  private updateTodo(): void {
+    const { id, isCompleted, dueDate, title, priorityId } = this.form.value;
+    const date = this._datePipe.transform(dueDate, 'YYYY-MM-dd') as string;
+
+    const request: UpdateTodoRequestModel = {
+      id,
+      isCompleted,
+      dueDate: date,
+      title,
+      priorityId,
+    };
+
+    if (this.form.valid) {
+      this._store.dispatch(todosActions.update({ request }));
+    }
   }
 }

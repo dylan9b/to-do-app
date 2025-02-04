@@ -1,4 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -25,6 +30,7 @@ import { AuthFormControl } from './_model/auth-form-control.model';
   ],
   standalone: true,
   template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthComponent {
   form!: FormGroup;

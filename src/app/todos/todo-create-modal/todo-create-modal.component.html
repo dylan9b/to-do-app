@@ -3,14 +3,18 @@
 </button>
 
 <mat-dialog-content class="mat-typography">
-  <h2 mat-dialog-title>Add new todo item</h2>
+  <h2 mat-dialog-title>
+    {{ data?.todo?.id ? "Update" : "Create" }} new todo item
+  </h2>
   @if(form) {
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- TITLE -->
     <mat-form-field class="w-full">
       <mat-label>Title</mat-label>
       <input matInput type="text" formControlName="title" />
     </mat-form-field>
 
+    <!-- DUE DATE -->
     <mat-form-field class="w-full">
       <mat-label>Due Date</mat-label>
       <input matInput [matDatepicker]="picker" formControlName="dueDate" />
@@ -21,6 +25,18 @@
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
+    <!-- IS COMPLETE -->
+    @if (data?.todo?.id) {
+
+    <mat-checkbox
+      [checked]="!!data?.todo?.isCompleted"
+      formControlName="isCompleted"
+    >
+      Is Completed
+    </mat-checkbox>
+    }
+
+    <!-- PRIORITY -->
     <mat-form-field class="w-full">
       <mat-label>Priority</mat-label>
       <mat-select formControlName="priorityId">

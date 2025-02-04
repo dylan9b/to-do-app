@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '@services/auth.service';
@@ -27,6 +27,7 @@ import { passwordMatchValidator } from '../validator/password-validator';
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterComponent extends AuthComponent {
   private readonly _authService = inject(AuthService);
