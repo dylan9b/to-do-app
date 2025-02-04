@@ -19,10 +19,12 @@ import {
 } from '@angular/common/http';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
-import { todoReducer } from './state/reducers';
-import { TodoEffects } from './state/effects';
+import { todoReducer } from './state/todo/todo-reducers';
+import { TodoEffects } from './state/todo/todo-effects';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { priorityReducer } from './state/priority/priority.reducer';
+import { PriorityEffects } from './state/priority/priority.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -32,19 +34,20 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideAnimationsAsync(),
     provideStore(
-      { todos: todoReducer },
+      { todos: todoReducer, priorities: priorityReducer },
       {
         runtimeChecks: {
-            strictActionImmutability: true,
-            strictActionSerializability: true,
-            strictActionTypeUniqueness: true,
-            strictStateSerializability: true,
-            strictStateImmutability: true,
+          strictActionImmutability: true,
+          strictActionSerializability: true,
+          // strictActionTypeUniqueness: true,
+          strictStateSerializability: true,
+          strictStateImmutability: true,
         },
       }
     ),
-    provideEffects(TodoEffects),
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    provideEffects([TodoEffects, PriorityEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
+    
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
 };

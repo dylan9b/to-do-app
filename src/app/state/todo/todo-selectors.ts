@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
-import { todosAdapter } from './adapter';
-import { AppState } from './app.state';
+import { todosAdapter } from './todo-adapter';
+import { AppState } from '../app.state';
 
 export const selectTodoState = (state: AppState) => state?.todos;
 

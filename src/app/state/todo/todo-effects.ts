@@ -1,10 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { TodoService } from '@services/todo.service';
-import { TodosActions } from './actions';
+import { todosActions } from './todo-actions';
 import { catchError, from, map, of, switchMap } from 'rxjs';
 import { Update } from '@ngrx/entity';
-import { TodoModel } from '../todos/_model/todo.model';
+import { TodoModel } from '../../todos/_model/todo.model';
 
 @Injectable()
 export class TodoEffects {
@@ -13,11 +13,11 @@ export class TodoEffects {
 
   loadTodos$ = createEffect(() =>
     this._actions$.pipe(
-      ofType(TodosActions.load),
+      ofType(todosActions.load),
       switchMap((action) =>
         from(this._todoService.todos$(action?.request)).pipe(
-          map((response) => TodosActions.loadSuccess({ response })),
-          catchError((error) => of(TodosActions.loadFailure({ error })))
+          map((response) => todosActions.loadSuccess({ response })),
+          catchError((error) => of(todosActions.loadFailure({ error })))
         )
       )
     )
@@ -25,7 +25,7 @@ export class TodoEffects {
 
   updateTodo$ = createEffect(() =>
     this._actions$.pipe(
-      ofType(TodosActions.update),
+      ofType(todosActions.update),
       switchMap((action) =>
         from(this._todoService.updateTodo$(action?.request)).pipe(
           map((response) => {
@@ -34,9 +34,9 @@ export class TodoEffects {
               changes: { ...response?.todo },
             };
 
-            return TodosActions.updateSuccess({ response: updatedTodo });
+            return todosActions.updateSuccess({ response: updatedTodo });
           }),
-          catchError((error) => of(TodosActions.updateFailure({ error })))
+          catchError((error) => of(todosActions.updateFailure({ error })))
         )
       )
     )
@@ -44,13 +44,27 @@ export class TodoEffects {
 
   deleteTodo$ = createEffect(() =>
     this._actions$.pipe(
-      ofType(TodosActions.delete),
+      ofType(todosActions.delete),
       switchMap((action) =>
         from(this._todoService.deleteTodo$(action?.id)).pipe(
           map((response) => {
-            return TodosActions.deleteSuccess({ id: response.id });
+            return todosActions.deleteSuccess({ id: response.id });
           }),
-          catchError((error) => of(TodosActions.deleteFailure({ error })))
+          catchError((error) => of(todosActions.deleteFailure({ error })))
+        )
+      )
+    )
+  );
+
+  createTodo$ = createEffect(() =>
+    this._actions$.pipe(
+      ofType(todosActions.create),
+      switchMap((action) =>
+        from(this._todoService.createTodo$(action?.request)).pipe(
+          map((response) => {
+            return todosActions.createSuccess({ response: response?.todo });
+          }),
+          catchError((error) => of(todosActions.createFailure({ error })))
         )
       )
     )

@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { selectAllTodos } from '../state/selectors';
-import { TodosActions } from '../state/actions';
+import { selectAllTodos } from '../state/todo/todo-selectors';
+import { todosActions } from '../state/todo/todo-actions';
 import { AppState } from '../state/app.state';
 import { TodoItemComponent } from './todo-item/todo-item.component';
+import { priorityActions } from '../state/priority/priority.actions';
 
 @Component({
   selector: 'app-todos',
@@ -19,6 +20,7 @@ export class TodosComponent {
   todosSignal = this._store.selectSignal(selectAllTodos);
 
   constructor() {
-    this._store.dispatch(TodosActions.load({ request: null }));
+    this._store.dispatch(todosActions.load({ request: null }));
+    this._store.dispatch(priorityActions.load());
   }
 }

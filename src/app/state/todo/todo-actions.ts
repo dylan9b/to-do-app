@@ -1,10 +1,11 @@
 import { createActionGroup, props } from '@ngrx/store';
-import { TodoRequestModel } from '../todos/_model/request/todo-request.model';
-import { TodoModel } from '../todos/_model/todo.model';
-import { UpdateTodoRequestModel } from '../todos/_model/request/update-todo-request.model';
+import { TodoRequestModel } from '../../todos/_model/request/todo-request.model';
+import { TodoModel } from '../../todos/_model/todo.model';
+import { UpdateTodoRequestModel } from '../../todos/_model/request/update-todo-request.model';
 import { Update } from '@ngrx/entity';
+import { CreateTodoRequestModel } from '../../todos/_model/request/create-todo-request.model';
 
-export const TodosActions = createActionGroup({
+export const todosActions = createActionGroup({
   source: 'Todos',
   events: {
     Load: props<{ request: TodoRequestModel | null }>(),
@@ -18,5 +19,9 @@ export const TodosActions = createActionGroup({
     Delete: props<{ id: string }>(),
     'Delete Success': props<{ id: string }>(),
     'Delete Failure': props<{ error: string }>(),
+
+    Create: props<{ request: CreateTodoRequestModel }>(),
+    'Create Success': props<{ response: TodoModel }>(),
+    'Create Failure': props<{ error: string }>(),
   },
 });

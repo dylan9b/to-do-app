@@ -1,11 +1,15 @@
-<div class="h-1/3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
-  <section class="flex flex-col gap-2 items-center justify-center relative p-4 top-1/3">
-    <div class="w-full lg:w-1/4 flex flex-col">
-      <h1 class="text-white font-extrabold text-[3rem]">TODOS</h1>
+<section
+  class="flex flex-col gap-2 items-center justify-center h-screen z-[1] relative bg-no-repeat bg-cover bg-center p-4"
+>
+  <div class="w-full lg:w-1/4 flex flex-col">
+    <h1 class="text-white font-extrabold text-[3rem]">TODOS</h1>
 
+    <div
+      class="flex flex-col items-center justify-between gap-4 rounded-lg bg-white p-6 shadow-md outline outline-black/5 dark:bg-gray-800"
+    >
       @for(todo of todosSignal(); track todo?.id) {
-      <app-todo-item class="divide-solid" [todoSignal]="todo"></app-todo-item>
+      <app-todo-item class="w-full" [todoSignal]="todo"></app-todo-item>
       }
     </div>
-  </section>
-</div>
+  </div>
+</section>

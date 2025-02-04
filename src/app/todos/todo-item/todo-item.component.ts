@@ -7,8 +7,8 @@ import {
   MatCheckboxModule,
 } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
-import { TodosActions } from '../../state/actions';
 import { UpdateTodoRequestModel } from '../_model/request/update-todo-request.model';
+import { todosActions } from '../../state/todo/todo-actions';
 
 @Component({
   selector: 'app-todo-item',
@@ -29,13 +29,13 @@ export class TodoItemComponent {
     };
 
     this._store.dispatch(
-      TodosActions.update({
+      todosActions.update({
         request,
       })
     );
   }
 
   removeTodo(): void {
-    this._store.dispatch(TodosActions.delete({ id: this.todoSignal()?.id }));
+    this._store.dispatch(todosActions.delete({ id: this.todoSignal()?.id }));
   }
 }

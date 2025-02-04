@@ -7,6 +7,8 @@ import { TodoModel } from '../todos/_model/todo.model';
 import { DeleteTodoResponseModel } from '../todos/_model/response/delete-todo-respnse.model';
 import { UpdateTodoRequestModel } from '../todos/_model/request/update-todo-request.model';
 import { UpdateTodoResponseModel } from '../todos/_model/response/update-todo-response.model';
+import { CreateTodoRequestModel } from '../todos/_model/request/create-todo-request.model';
+import { CreateTodoResponseModel } from '../todos/_model/response/create-todo-response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +18,8 @@ export class TodoService {
 
   todos$(request?: TodoRequestModel | null): Observable<TodoModel[]> {
     return this._http
-      .post<TodoModel[]>(`${environment.apiUrl}todos.php`, {
-        ...request,
+      .get<TodoModel[]>(`${environment.apiUrl}todos.php`, {
+        params: { ...request },
       })
       .pipe(
         map((response) => response),
@@ -46,6 +48,21 @@ export class TodoService {
     return this._http
       .delete<DeleteTodoResponseModel>(`${environment.apiUrl}delete.php`, {
         body: { id },
+      })
+      .pipe(
+        map((response) => response),
+        catchError((err) => {
+          throw err;
+        })
+      );
+  }
+
+  createTodo$(
+    request: CreateTodoRequestModel
+  ): Observable<CreateTodoResponseModel> {
+    return this._http
+      .post<CreateTodoResponseModel>(`${environment.apiUrl}create.php`, {
+        ...request,
       })
       .pipe(
         map((response) => response),
