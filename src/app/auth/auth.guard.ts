@@ -12,8 +12,7 @@ export class AuthGuard implements CanActivate {
   canActivate(): boolean {
     const token =
       this._cookieService.get('accessToken') ||
-      sessionStorage.getItem('accessToken');
-
+      sessionStorage?.getItem('accessToken');
     if (!token) {
       this._router.navigate(['/auth/login']);
       return false;

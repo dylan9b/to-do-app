@@ -1,6 +1,14 @@
 <section
   class="flex flex-col gap-2 items-center justify-center h-screen z-[1] relative bg-no-repeat bg-cover bg-center p-4"
 >
+  <button
+    type="button"
+    class="flex items-center justify-center rounded-full bg-red-800 text-white text-2xl p-4"
+    (click)="logOut()"
+  >
+    <mat-icon>power_settings_circle</mat-icon>
+  </button>
+
   <div class="w-full lg:w-1/4 flex flex-col">
     <h1
       class="text-white font-extrabold text-[3rem] flex flex-row items-center justify-between"

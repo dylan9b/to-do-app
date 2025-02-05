@@ -5,12 +5,19 @@ import { LoginResponseModel } from '../auth/login/_model/login-response.model';
 import { environment } from '../environment/environment';
 import { RegisterResponseModel } from '../auth/register/_model/register-response.model';
 import { AuthRequestModel } from '../auth/_model/auth-request.model';
+import { CookieService } from 'ngx-cookie-service';
+import { Router } from '@angular/router';
+import { AppState } from '../state/app.state';
+import { Store } from '@ngrx/store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private readonly _http = inject(HttpClient);
+  private readonly _cookieService = inject(CookieService);
+  private readonly _router = inject(Router);
+  private readonly _store = inject(Store<AppState>);
 
   login$(request: AuthRequestModel): Observable<LoginResponseModel> {
     return this._http
@@ -40,5 +47,11 @@ export class AuthService {
           throw err;
         })
       );
+  }
+
+  logOut(): void {
+    this._cookieService.delete('accessToken');
+    sessionStorage.removeItem('accessToken');
+    this._router.navigate(['/auth', 'login']);
   }
 }

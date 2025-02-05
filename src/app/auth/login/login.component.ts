@@ -49,7 +49,7 @@ export class LoginComponent extends AuthComponent {
   }
 
   private storeTokenInSession(token: string): void {
-    sessionStorage.setItem('accessToken', token);
+    window?.sessionStorage?.setItem('accessToken', token);
   }
 
   private storeTokenInCookie(token: string, expiryDate: Date): void {
@@ -72,6 +72,11 @@ export class LoginComponent extends AuthComponent {
     });
   }
 
+  private clearAllTokens(): void {
+    this._cookieService.delete('accessToken');
+    sessionStorage.removeItem('accessToken');
+  }
+
   onSubmit(): void {
     if (this.form.valid) {
       const { email, password, rememberMe } = this.form.value;
@@ -84,6 +89,8 @@ export class LoginComponent extends AuthComponent {
         .login$(request)
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((response) => {
+          this.clearAllTokens();
+
           if (rememberMe) {
             this.storeTokenInCookie(
               response?.data?.accessToken,

@@ -18,11 +18,13 @@ export const todoReducer = createReducer(
     ...state,
     status: STATUS.LOADING,
   })),
-  on(todosActions.loadSuccess, (state, { response }) => ({
-    ...state,
-    ...todosAdapter.setMany(response, state),
-    status: STATUS.SUCCESS,
-  })),
+  on(todosActions.loadSuccess, (state, { response }) => {
+    return {
+      ...state,
+      ...todosAdapter.setAll(response, state),
+      status: STATUS.SUCCESS,
+    };
+  }),
   on(todosActions.loadFailure, (state, { error }) => ({
     ...state,
     status: STATUS.ERROR,

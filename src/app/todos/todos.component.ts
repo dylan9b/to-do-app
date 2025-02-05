@@ -9,6 +9,7 @@ import { priorityActions } from '../state/priority/priority.actions';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
+import { AuthService } from '@services/auth.service';
 
 @Component({
   selector: 'app-todos',
@@ -21,6 +22,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class TodosComponent {
   private readonly _store = inject(Store<AppState>);
   private readonly _dialog = inject(MatDialog);
+  private readonly _authService = inject(AuthService);
 
   readonly todosSignal = this._store.selectSignal(selectAllTodos);
 
@@ -33,5 +35,9 @@ export class TodosComponent {
     import('./todo-modal/todo-modal.component').then((c) => {
       this._dialog.open(c.TodoModalComponent);
     });
+  }
+
+  logOut(): void {
+    this._authService.logOut();
   }
 }

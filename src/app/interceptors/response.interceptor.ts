@@ -5,38 +5,53 @@ import {
   HttpHandler,
   HttpRequest,
   HttpErrorResponse,
+  HttpResponse,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TodoResponseModel } from '../todos/_model/response/todo-response.model';
 
 @Injectable()
 export class ResponseInterceptor implements HttpInterceptor {
   private readonly _router = inject(Router);
+  private readonly _snackBar = inject(MatSnackBar);
 
   intercept(
     req: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     return next.handle(req).pipe(
+      tap((event: HttpEvent<TodoResponseModel>) => {
+        if (event instanceof HttpResponse && event.body!.message) {
+          switch (event.status) {
+            case 200:
+              this._snackBar.open(event.body!.message, 'Success');
+              break;
+            case 201:
+              this._snackBar.open(event.body!.message, 'Created');
+              break;
+          }
+        }
+      }),
       catchError((error: HttpErrorResponse) => {
-        // Handle different status codes
-        if (error.status === 401) {
-          // Unauthorized, redirect to login
-          sessionStorage.removeItem('accessToken');
-          this._router.navigate(['/auth', 'login']);
-          console.log('Unauthorized, redirecting to login...');
-          // You can navigate to the login page here
-        } else if (error.status === 500) {
-          // Internal Server Error
-          console.log('Internal Server Error occurred.');
-          // Handle server error
-        } else if (error.status === 403) {
-          // Forbidden error
-          console.log('Access Forbidden!');
+        switch (error.status) {
+          case 401:
+            window?.sessionStorage?.removeItem('accessToken');
+            this._snackBar.open(error?.error?.message, 'Aunautorized');
+            this._router.navigate(['/auth', 'login']);
+            break;
+          case 500:
+            console.log('Internal Server Error occurred.');
+            this._snackBar.open(error?.error?.message, 'Server Error');
+            break;
+          case 403:
+            console.log('Access Forbidden!');
+            this._snackBar.open(error?.error?.message, 'Access Forbidden');
+            break;
         }
 
-        // You can throw or return a new error based on the status code
         throw error;
       })
     );

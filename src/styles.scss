@@ -2,8 +2,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-html, body { height: 100%; }
+html,
+body {
+  height: 100%;
+}
 
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
+}
+
+:root {
+  .mat-mdc-snack-bar-label {
+    font-family: "Montserrat", sans-serif !important;
+  }
+  .mat-mdc-snack-bar-action {
+    font-family: "Montserrat", sans-serif;
+  }
 }
