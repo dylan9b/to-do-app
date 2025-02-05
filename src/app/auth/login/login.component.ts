@@ -48,9 +48,33 @@ export class LoginComponent extends AuthComponent {
     this.form = this.populateForm(new LoginFormControl());
   }
 
+  private storeTokenInSession(token: string): void {
+    sessionStorage.setItem('accessToken', token);
+  }
+
+  private storeTokenInCookie(token: string, expiryDate: Date): void {
+    const expireDate = new Date(expiryDate);
+
+    const utcExpireDate = new Date(
+      Date.UTC(
+        expireDate.getFullYear(),
+        expireDate.getMonth(),
+        expireDate.getDate(),
+        expireDate.getHours(),
+        expireDate.getMinutes(),
+        expireDate.getSeconds()
+      )
+    );
+
+    this._cookieService.set('accessToken', token, {
+      expires: utcExpireDate,
+      sameSite: 'Lax',
+    });
+  }
+
   onSubmit(): void {
     if (this.form.valid) {
-      const { email, password } = this.form.value;
+      const { email, password, rememberMe } = this.form.value;
       const request: AuthRequestModel = {
         email,
         password,
@@ -60,24 +84,14 @@ export class LoginComponent extends AuthComponent {
         .login$(request)
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((response) => {
-          const expireDate = new Date(response?.data?.expiryDate);
-
-            const utcExpireDate = new Date(
-            Date.UTC(
-              expireDate.getFullYear(),
-              expireDate.getMonth(),
-              expireDate.getDate(),
-              expireDate.getHours(),
-              expireDate.getMinutes(),
-              expireDate.getSeconds()
-            )
-          );
-
-          this._cookieService.set('accessToken', response?.data?.accessToken, {
-            expires: utcExpireDate,
-            sameSite: 'Lax',
-          });
-
+          if (rememberMe) {
+            this.storeTokenInCookie(
+              response?.data?.accessToken,
+              response?.data?.expiryDate
+            );
+          } else {
+            this.storeTokenInSession(response?.data?.accessToken);
+          }
           this._router.navigate(['/todos']);
         });
     }

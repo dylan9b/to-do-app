@@ -5,6 +5,5 @@ export interface LoginResponseModel {
     accessToken: string;
     refreshToken: string;
     expiryDate: Date;
-    maxAge: number;
   }
 }

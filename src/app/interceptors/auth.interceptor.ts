@@ -16,7 +16,9 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    const accessToken = this._cookieService.get('accessToken');
+    const accessToken =
+      this._cookieService.get('accessToken') ||
+      sessionStorage.getItem('accessToken');
 
     if (accessToken) {
       const cloned = req.clone({
@@ -25,6 +27,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
       return next.handle(cloned);
     } else {
+      sessionStorage.removeItem('accessToken');
       return next.handle(req);
     }
   }

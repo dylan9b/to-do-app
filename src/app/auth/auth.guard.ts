@@ -10,7 +10,9 @@ export class AuthGuard implements CanActivate {
   private readonly _cookieService = inject(CookieService);
 
   canActivate(): boolean {
-    const token = this._cookieService.get('accessToken');
+    const token =
+      this._cookieService.get('accessToken') ||
+      sessionStorage.getItem('accessToken');
 
     if (!token) {
       this._router.navigate(['/auth/login']);

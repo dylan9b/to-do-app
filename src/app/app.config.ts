@@ -27,6 +27,7 @@ import { priorityReducer } from './state/priority/priority.reducer';
 import { PriorityEffects } from './state/priority/priority.effects';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { DatePipe } from '@angular/common';
+import { ResponseInterceptor } from './interceptors/response.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -52,6 +53,7 @@ export const appConfig: ApplicationConfig = {
     provideNativeDateAdapter(),
 
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ResponseInterceptor, multi: true },
 
     DatePipe,
   ],
