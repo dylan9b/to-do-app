@@ -1,6 +1,6 @@
 import { FormControl, Validators } from '@angular/forms';
 
-export class TodoCreateModalFormControl {
+export class TodoModalFormControl {
   constructor(
     public id: FormControl = new FormControl(null),
     public title: FormControl = new FormControl(null, [Validators.required]),

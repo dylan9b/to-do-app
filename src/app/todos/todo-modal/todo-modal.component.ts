@@ -7,7 +7,6 @@ import {
 } from '@angular/forms';
 import { AppState } from '../../state/app.state';
 import { Store } from '@ngrx/store';
-import { TodoCreateModalFormControl } from './_model/todo-create-modal-form-control.model';
 import { CreateTodoRequestModel } from '../_model/request/create-todo-request.model';
 import { selectAllPriorities } from '../../state/priority/priority.selectors';
 import { todosActions } from '../../state/todo/todo-actions';
@@ -25,6 +24,7 @@ import { DatePipe } from '@angular/common';
 import { TodoModel } from '../_model/todo.model';
 import { UpdateTodoRequestModel } from '../_model/request/update-todo-request.model';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { TodoModalFormControl } from './_model/todo-modal-form-control.model';
 
 @Component({
   selector: 'app-todo-create-modal',
@@ -40,12 +40,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatCheckboxModule,
   ],
   providers: [DatePipe],
-  templateUrl: './todo-create-modal.component.html',
-  styleUrl: './todo-create-modal.component.scss',
+  templateUrl: './todo-modal.component.html',
+  styleUrl: './todo-modal.component.scss',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TodoCreateModalComponent {
+export class TodoModalComponent {
   private readonly _formBuilder = inject(FormBuilder);
   private readonly _store = inject(Store<AppState>);
   private readonly _datePipe = inject(DatePipe);
@@ -62,7 +62,7 @@ export class TodoCreateModalComponent {
   }
 
   private populateFormControl(): FormGroup {
-    const form = new TodoCreateModalFormControl();
+    const form = new TodoModalFormControl();
 
     if (this.data?.todo?.id) {
       form.dueDate.setValue(this.data?.todo?.dueDate);

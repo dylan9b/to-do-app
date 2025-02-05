@@ -30,8 +30,8 @@ export class TodosComponent {
   }
 
   openCreateTodoModal(): void {
-    import('./todo-create-modal/todo-create-modal.component').then((c) => {
-      this._dialog.open(c.TodoCreateModalComponent);
+    import('./todo-modal/todo-modal.component').then((c) => {
+      this._dialog.open(c.TodoModalComponent);
     });
   }
 }
