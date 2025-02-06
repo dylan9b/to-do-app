@@ -8,16 +8,18 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { LoginFormControl } from './_model/login-form-control.model';
 import { MatIconModule } from '@angular/material/icon';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '@services/auth.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Router, RouterLink } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { AuthComponent } from '../auth.component';
-import { AuthRequestModel } from '../_model/auth-request.model';
 import { MatRippleModule } from '@angular/material/core';
+import { AuthRequestModel } from '../_model/auth-request.model';
+import { AuthComponent } from '../auth.component';
+import { LoginFormControl } from './_model/login-form-control.model';
+import { SessionStorageEnum } from '@shared/sessionStorage.enum';
+import { PlatformService } from '@services/platform.service';
 
 @Component({
   selector: 'app-login',
@@ -42,14 +44,13 @@ export class LoginComponent extends AuthComponent {
   private readonly _destroyRef = inject(DestroyRef);
   private readonly _cookieService = inject(CookieService);
   private readonly _router = inject(Router);
+  private readonly _platformService = inject(PlatformService);
+
+  private readonly tokenKey = SessionStorageEnum.ACCESS_TOKEN;
 
   constructor() {
     super();
     this.form = this.populateForm(new LoginFormControl());
-  }
-
-  private storeTokenInSession(token: string): void {
-    window?.sessionStorage?.setItem('accessToken', token);
   }
 
   private storeTokenInCookie(token: string, expiryDate: Date): void {
@@ -66,15 +67,15 @@ export class LoginComponent extends AuthComponent {
       )
     );
 
-    this._cookieService.set('accessToken', token, {
+    this._cookieService.set(this.tokenKey, token, {
       expires: utcExpireDate,
       sameSite: 'Lax',
     });
   }
 
   private clearAllTokens(): void {
-    this._cookieService.delete('accessToken');
-    sessionStorage.removeItem('accessToken');
+    this._cookieService.delete(this.tokenKey);
+    sessionStorage.removeItem(this.tokenKey);
   }
 
   onSubmit(): void {
@@ -97,7 +98,10 @@ export class LoginComponent extends AuthComponent {
               response?.data?.expiryDate
             );
           } else {
-            this.storeTokenInSession(response?.data?.accessToken);
+            this._platformService.setItemSessionStorage(
+              this.tokenKey,
+              response?.data?.accessToken
+            );
           }
           this._router.navigate(['/todos']);
         });
