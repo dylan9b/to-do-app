@@ -8,9 +8,9 @@ import { SessionStorageEnum } from '../shared/sessionStorage.enum';
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  private readonly _router = inject(Router);
   private readonly _cookieService = inject(CookieService);
   private readonly _platformService = inject(PlatformService);
+  private readonly _router = inject(Router);
 
   canActivate(): boolean {
     const token =
@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
         SessionStorageEnum.ACCESS_TOKEN
       );
     if (!token) {
-      this._router.navigate(['/auth/login']);
+      this._router.navigate(['/auth', 'login']);
       return false;
     }
 

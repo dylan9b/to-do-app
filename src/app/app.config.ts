@@ -28,6 +28,7 @@ import { PriorityEffects } from './state/priority/priority.effects';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { DatePipe } from '@angular/common';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -54,7 +55,7 @@ export const appConfig: ApplicationConfig = {
 
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ResponseInterceptor, multi: true },
-
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 1000 } },
     DatePipe,
   ],
 };

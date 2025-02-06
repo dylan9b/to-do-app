@@ -1,11 +1,10 @@
-@use 'colors' as *;
-@use 'color_variables' as *;
+@use "colors" as *;
+@use "root_variables" as *;
 
 /* You can add global styles to this file, and also import other style files */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 
 html,
 body {
@@ -13,14 +12,18 @@ body {
 }
 
 body {
-  font-family: "Montserrat", sans-serif;
+  font-family: var(--font-primary);
 }
 
 :root {
   .mat-mdc-snack-bar-label {
-    font-family: "Montserrat", sans-serif !important;
+    font-family: var(--font-primary) !important;
   }
   .mat-mdc-snack-bar-action {
-    font-family: "Montserrat", sans-serif;
+    font-family: var(--font-primary);
+  }
+
+  .mat-mdc-menu-item-text {
+    font-family: var(--font-primary) !important;
   }
 }

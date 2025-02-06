@@ -1,0 +1,11 @@
+@use "colors" as *;
+
+:root {
+  --font-primary: "Montserrat", sans-serif;
+
+  --blue: #{$blue};
+  --blue-dark: #{$blue-dark};
+
+  --red: #{$red};
+  --red-dark: #{$red-dark};
+}

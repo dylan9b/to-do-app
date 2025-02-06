@@ -1,49 +1,29 @@
+@use "mixins/animation-mixin" as *;
+@use "mixins/background-mixin" as *;
+@use "colors" as *;
+
 :host {
-  ::ng-deep {
-    mat-checkbox {
-      label {
-        font-family: 'Montserrat';
-        color: white;
-        font-weight: 600;
+  fieldset {
+    input {
+      &:focus-visible {
+        outline: none;
+      }
+    }
+
+    > mat-icon {
+      opacity: 0.2;
+    }
+
+    &:focus-within {
+      > mat-icon {
+        opacity: 1;
+        color: var(--red);
+        @include grow-and-shrink(0.25s, 1.5);
       }
     }
   }
 }
 
-
 section {
-  background-image: url("/assets/auth-bg.jpg");
-
-  &:before {
-    content: "";
-    display: block;
-    position: absolute;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: #ea0033;
-    background: -webkit-linear-gradient(bottom, #ea003b, #fb007d);
-    background: -o-linear-gradient(bottom, #ea003b, #fb007d);
-    background: -moz-linear-gradient(bottom, #ea003b, #fb007d);
-    background: linear-gradient(bottom, #ea003b, #fb007d);
-    opacity: 0.9;
-  }
-
-  input {
-    outline-color: white;
-
-    &:focus-visible {
-      outline-color: white;
-    }
-  }
-
-  .submit {
-    transition: 0.25s ease-in-out;
-
-    &:hover {
-      transition: 0.25s ease-in-out;
-    }
-  }
+  @include background-setup($red, $red-dark);
 }

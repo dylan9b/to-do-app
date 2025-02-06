@@ -1,5 +1,5 @@
-@use "mixins/animation-mixin" as animation;
-@use "mixins/background-mixin" as background;
+@use "mixins/animation-mixin" as *;
+@use "mixins/background-mixin" as *;
 
 :host {
   ::ng-deep {
@@ -27,12 +27,12 @@
       > mat-icon {
         opacity: 1;
         color: var(--blue);
-        @include animation.grow-and-shrink(0.25s, 1.5);
+        @include grow-and-shrink(0.25s, 1.5);
       }
     }
   }
 }
 
 section {
-  @include background.background-setup();
+  @include background-setup();
 }
