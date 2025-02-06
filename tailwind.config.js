@@ -4,7 +4,8 @@ module.exports = {
     "./src/**/*.{html,ts}", // Scan all HTML and TypeScript files for Tailwind classes
   ],
   theme: {
-    extend: {},
+    extend: {
+    },
   },
   plugins: [],
 };

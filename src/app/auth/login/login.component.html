@@ -10,23 +10,35 @@
       class="flex flex-col gap-7 w-full"
       (ngSubmit)="onSubmit()"
     >
+      <!-- EMAIL -->
       <fieldset class="relative flex items-center">
         <input
           matInput
           placeholder="Email"
           formControlName="email"
-          class="w-full p-4 rounded-[2rem] focus-within:shadow-lg focus-within:shadow-orange-800"
+          class="w-full p-4 rounded-[2rem] pl-10"
         />
+        <mat-icon
+          matPrefix
+          class="absolute left-4 pointer-events-none !h-4 !w-4 text-[1rem]"
+          >mail</mat-icon
+        >
       </fieldset>
 
+      <!-- PASSWORD -->
       <fieldset class="relative flex items-center">
         <input
           matInput
           formControlName="password"
           placeholder="Password"
           [type]="hidePasswordSignal() ? 'password' : 'text'"
-          class="w-full p-4 rounded-[2rem] focus-within:shadow-lg focus-within:shadow-orange-800"
+          class="w-full p-4 rounded-[2rem] pl-10"
         />
+        <mat-icon
+          matPrefix
+          class="absolute left-4 pointer-events-none !h-4 !w-4 text-[1rem]"
+          >key</mat-icon
+        >
         <button
           class="!absolute right-4"
           mat-icon-button
@@ -43,12 +55,13 @@
         </button>
       </fieldset>
 
+      <!-- REMEMBER ME -->
       <fieldset>
         <mat-checkbox formControlName="rememberMe"> Remember Me </mat-checkbox>
       </fieldset>
 
       <button
-        class="submit p-4 rounded-[2rem] font-bold text-white bg-teal-950 hover:bg-white hover:text-teal-950"
+        class="submit transition-all duration-500 ease-in-out p-4 rounded-[2rem] font-bold text-white bg-[var(--blue-dark)] hover:bg-white hover:text-[var(--blue-dark)] hover:transition-all hover:duration-500 hover:ease-in-out"
         type="submit"
       >
         Login

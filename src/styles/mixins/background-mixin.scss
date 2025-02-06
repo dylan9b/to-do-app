@@ -1,0 +1,25 @@
+
+@mixin background-setup(
+  $primaryColor: #005bea,
+  $secondaryColor: #00c6fb,
+  $imageUrl: "/assets/auth-bg.jpg"
+) {
+  background-image: url($imageUrl);
+
+  &:before {
+    content: "";
+    display: block;
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: $primaryColor;
+    background: -webkit-linear-gradient(bottom, $primaryColor, $secondaryColor);
+    background: -o-linear-gradient(bottom, $primaryColor, $secondaryColor);
+    background: -moz-linear-gradient(bottom, $primaryColor, $secondaryColor);
+    background: linear-gradient(bottom, $primaryColor, $secondaryColor);
+    opacity: 0.9;
+  }
+}

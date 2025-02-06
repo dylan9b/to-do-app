@@ -21,7 +21,8 @@
       "@services/*": ["./src/app/services/*"],
       "@shared/*": ["./src/app/shared/*"],
       "@auth/*": ["./src/app/auth/*"],
-      "@state/*": ["./src/app/state/*"]
+      "@state/*": ["./src/app/state/*"],
+      "@styles/*": ["./src/styles/*"]
     }
   },
   "angularCompilerOptions": {

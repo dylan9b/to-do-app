@@ -1,0 +1,15 @@
+@mixin grow-and-shrink($duration: 0.5s, $scale: 1.5) {
+  @keyframes growAndShrink {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale($scale);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  animation: growAndShrink $duration ease-in-out;
+}
