@@ -3,6 +3,7 @@ import {
   Component,
   DestroyRef,
   inject,
+  OnInit,
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,6 +21,14 @@ import { AuthComponent } from '../auth.component';
 import { LoginFormControl } from './_model/login-form-control.model';
 import { SessionStorageEnum } from '@shared/sessionStorage.enum';
 import { PlatformService } from '@services/platform.service';
+import {
+  GoogleSigninButtonModule,
+  SocialAuthService,
+} from '@abacritt/angularx-social-login';
+import { of, switchMap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AppState } from '@state/app.state';
+import { UserState } from '@state/user/user-state';
 
 @Component({
   selector: 'app-login',
@@ -33,18 +42,21 @@ import { PlatformService } from '@services/platform.service';
     MatCheckboxModule,
     RouterLink,
     MatRippleModule,
+    GoogleSigninButtonModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent extends AuthComponent {
+export class LoginComponent extends AuthComponent implements OnInit {
   private readonly _authService = inject(AuthService);
   private readonly _destroyRef = inject(DestroyRef);
   private readonly _cookieService = inject(CookieService);
   private readonly _router = inject(Router);
   private readonly _platformService = inject(PlatformService);
+  private readonly _socialAuthService = inject(SocialAuthService);
+  private readonly _store = inject(Store<AppState>);
 
   private readonly tokenKey = SessionStorageEnum.ACCESS_TOKEN;
 
@@ -52,6 +64,14 @@ export class LoginComponent extends AuthComponent {
     super();
     this.form = this.populateForm(new LoginFormControl());
   }
+
+  ngOnInit(): void {
+    this.initiateGoogleSignIn();
+  }
+
+  isLoggedoutSignal = this._store.selectSignal(
+    (state: UserState) => state.isLoggedOut
+  );
 
   private storeTokenInCookie(token: string, expiryDate: Date): void {
     const expireDate = new Date(expiryDate);
@@ -76,6 +96,34 @@ export class LoginComponent extends AuthComponent {
   private clearAllTokens(): void {
     this._cookieService.delete(this.tokenKey);
     sessionStorage.removeItem(this.tokenKey);
+  }
+
+  private initiateGoogleSignIn(): void {
+    this._socialAuthService.authState
+      .pipe(
+        switchMap((googleUser) => {
+          if (this.isLoggedoutSignal()) {
+            return of(null);
+          }
+
+          if (googleUser && googleUser.idToken) {
+            return this._authService.loginInWithGoogle$(googleUser.idToken);
+          }
+
+          return of(null);
+        }),
+        takeUntilDestroyed(this._destroyRef)
+      )
+      .subscribe((response) => {
+        if (response) {
+          this.clearAllTokens();
+          this.storeTokenInCookie(
+            response?.data?.accessToken,
+            response?.data?.expiryDate
+          );
+          this._router.navigate(['/todos']);
+        }
+      });
   }
 
   onSubmit(): void {

@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { selectAllTodos } from '@state/todo/todo-selectors';
@@ -10,6 +15,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '@services/auth.service';
+import { SocialAuthService } from '@abacritt/angularx-social-login';
+import { from } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-todos',
@@ -23,6 +31,8 @@ export class TodosComponent {
   private readonly _store = inject(Store<AppState>);
   private readonly _dialog = inject(MatDialog);
   private readonly _authService = inject(AuthService);
+  private readonly _socialAuthService = inject(SocialAuthService);
+  private readonly _destroyRef = inject(DestroyRef);
 
   readonly todosSignal = this._store.selectSignal(selectAllTodos);
 
@@ -39,5 +49,13 @@ export class TodosComponent {
 
   logOut(): void {
     this._authService.logOut();
+  }
+
+  logOutFromGoogle(): void {
+    from(this._socialAuthService.signOut())
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe(() => {
+        this._authService.logOut();
+      });
   }
 }

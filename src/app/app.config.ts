@@ -29,7 +29,11 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { DatePipe } from '@angular/common';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
-
+import { SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
+import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
+import { environment } from './environment/environment';
+import { userReducer } from '@state/user/user-reducer';
+import { UserEffects } from '@state/user/user-effects';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
@@ -38,7 +42,7 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideAnimationsAsync(),
     provideStore(
-      { todos: todoReducer, priorities: priorityReducer },
+      { todos: todoReducer, priorities: priorityReducer, user: userReducer },
       {
         runtimeChecks: {
           strictActionImmutability: true,
@@ -49,13 +53,30 @@ export const appConfig: ApplicationConfig = {
         },
       }
     ),
-    provideEffects([TodoEffects, PriorityEffects]),
+    provideEffects([TodoEffects, PriorityEffects, UserEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideNativeDateAdapter(),
 
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ResponseInterceptor, multi: true },
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 1000 } },
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(environment.clientId, {
+              oneTapEnabled: false,
+            }),
+          },
+        ],
+        onError: (error) => {
+          console.error('GOOGLE ERROR ***', error);
+        },
+      } as SocialAuthServiceConfig,
+    },
     DatePipe,
   ],
 };
