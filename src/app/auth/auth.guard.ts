@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { PlatformService } from '@services/platform.service';
 import { CookieService } from 'ngx-cookie-service';
-import { SessionStorageEnum } from '../shared/sessionStorage.enum';
+import { SessionStorageEnum } from '@shared/sessionStorage.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
         SessionStorageEnum.ACCESS_TOKEN
       );
     if (!token) {
-      this._router.navigate(['/auth', 'login']);
+      // this._router.navigate(['/auth', 'login']);
       return false;
     }
 

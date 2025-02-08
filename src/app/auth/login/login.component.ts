@@ -90,6 +90,8 @@ export class LoginComponent extends AuthComponent implements OnInit {
     this._cookieService.set(this.tokenKey, token, {
       expires: utcExpireDate,
       sameSite: 'Lax',
+      path: '/',
+      domain: 'localhost'
     });
   }
 

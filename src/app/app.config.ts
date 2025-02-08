@@ -69,6 +69,10 @@ export const appConfig: ApplicationConfig = {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(environment.clientId, {
               oneTapEnabled: false,
+              scopes: [
+                'https://www.googleapis.com/auth/userinfo.profile',
+                'https://www.googleapis.com/auth/userinfo.email',
+              ],
             }),
           },
         ],
