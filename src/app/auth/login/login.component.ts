@@ -22,10 +22,11 @@ import { LoginFormControl } from './_model/login-form-control.model';
 import { SessionStorageEnum } from '@shared/sessionStorage.enum';
 import { PlatformService } from '@services/platform.service';
 import {
+  GoogleLoginProvider,
   GoogleSigninButtonModule,
   SocialAuthService,
 } from '@abacritt/angularx-social-login';
-import { of, switchMap } from 'rxjs';
+import { from, map, of, switchMap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '@state/app.state';
 import { UserState } from '@state/user/user-state';
@@ -91,7 +92,7 @@ export class LoginComponent extends AuthComponent implements OnInit {
       expires: utcExpireDate,
       sameSite: 'Lax',
       path: '/',
-      domain: 'localhost'
+      domain: 'localhost',
     });
   }
 
@@ -104,11 +105,33 @@ export class LoginComponent extends AuthComponent implements OnInit {
     this._socialAuthService.authState
       .pipe(
         switchMap((googleUser) => {
+          if (googleUser) {
+            return from(
+              this._socialAuthService.getAccessToken(
+                GoogleLoginProvider.PROVIDER_ID
+              )
+            ).pipe(
+              map((authToken) => {
+                return {
+                  ...googleUser,
+                  authToken,
+                };
+              })
+            );
+          }
+
+          return of(null);
+        }),
+        switchMap((googleUser) => {
           if (this.isLoggedoutSignal()) {
             return of(null);
           }
 
           if (googleUser && googleUser.idToken) {
+            this._cookieService.set(
+              SessionStorageEnum.GOOGLE_ACCESS_TOKEN,
+              googleUser.authToken
+            );
             return this._authService.loginInWithGoogle$(googleUser.idToken);
           }
 

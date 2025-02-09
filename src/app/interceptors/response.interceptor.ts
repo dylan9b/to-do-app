@@ -27,10 +27,28 @@ export class ResponseInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     return next.handle(req).pipe(
       tap((event: HttpEvent<TodoResponseModel>) => {
-        if (event instanceof HttpResponse && event.body!.message) {
+        const isGoogleEvent =
+          event instanceof HttpResponse &&
+          event.body!.kind === 'calendar#event';
+
+        if (
+          event instanceof HttpResponse &&
+          (isGoogleEvent || event.body!.message)
+        ) {
           switch (event.status) {
             case 200:
-              this._snackBar.open(event.body!.message, 'Success');
+              if (!isGoogleEvent) {
+                this._snackBar.open(event.body!.message, 'Success', {
+                  duration: 3000,
+                });
+              } else {
+                this._snackBar
+                  .open('Task created on google calendar', 'View')
+                  .onAction()
+                  .subscribe(() =>
+                    window.open(event!.body!.htmlLink, '_blank')
+                  );
+              }
               break;
             case 201:
               this._snackBar.open(event.body!.message, 'Created');

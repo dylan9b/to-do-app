@@ -17,6 +17,9 @@ import { todosActions } from '../../state/todo/todo-actions';
 import { DatePipe } from '@angular/common';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
+import { SessionStorageEnum } from '@shared/sessionStorage.enum';
 
 @Component({
   selector: 'app-todo-item',
@@ -29,6 +32,8 @@ import { MatDialog } from '@angular/material/dialog';
 export class TodoItemComponent {
   private readonly _store = inject(Store<AppState>);
   private readonly _dialog = inject(MatDialog);
+  private readonly _cookieService = inject(CookieService);
+  private readonly _httpClient = inject(HttpClient);
 
   readonly todoSignal = input.required<TodoModel>();
 
@@ -57,5 +62,46 @@ export class TodoItemComponent {
         },
       });
     });
+  }
+
+  createEvent() {
+    const event = {
+      summary: 'dylan test from angular',
+      start: {
+        date: '2025-02-09',
+        timeZone: 'Europe/Paris',
+      },
+      end: {
+        date: '2025-02-09',
+        timeZone: 'Europe/Paris',
+      },
+    };
+
+    const googleAuthToken = this._cookieService.get(
+      SessionStorageEnum.GOOGLE_ACCESS_TOKEN
+    );
+
+    if (googleAuthToken) {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${googleAuthToken}`,
+        'Content-Type': 'application/json',
+        skip: "true"
+      });
+
+      this._httpClient
+        .post(
+          'https://www.googleapis.com/calendar/v3/calendars/primary/events',
+          event,
+          { headers }
+        )
+        .subscribe({
+          next: (response) => {
+            console.log('Event created:', response);
+          },
+          error: (error) => {
+            console.error('Error creating event:', error);
+          },
+        });
+    }
   }
 }

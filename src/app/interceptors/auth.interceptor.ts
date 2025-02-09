@@ -21,19 +21,30 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    const accessToken =
-      this._cookieService.get(this.tokenKey) ||
-      this._platformService.getItemSessionStorage(this.tokenKey);
+    const skipIntercept = req.headers.has('skip');
+    let cloned: HttpRequest<unknown>;
 
-    if (accessToken) {
-      const cloned = req.clone({
-        headers: req.headers.set('Authorization', `Bearer ${accessToken}`),
+    if (skipIntercept) {
+      cloned = req.clone({
+        headers: req.headers.delete('skip'),
       });
 
       return next.handle(cloned);
     } else {
-      this._platformService.removeItemSessionStorage(this.tokenKey);
-      return next.handle(req);
+      const accessToken =
+        this._cookieService.get(this.tokenKey) ||
+        this._platformService.getItemSessionStorage(this.tokenKey);
+
+      if (accessToken) {
+        cloned = req.clone({
+          headers: req.headers.set('Authorization', `Bearer ${accessToken}`),
+        });
+
+        return next.handle(cloned);
+      } else {
+        this._platformService.removeItemSessionStorage(this.tokenKey);
+        return next.handle(req);
+      }
     }
   }
 }

@@ -13,6 +13,4 @@ import { SocialLoginModule } from '@abacritt/angularx-social-login';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
-  title = 'to-do-app';
-}
+export class AppComponent {}
