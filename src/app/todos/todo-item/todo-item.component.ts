@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   inject,
   input,
 } from '@angular/core';
@@ -20,6 +21,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { SessionStorageEnum } from '@shared/sessionStorage.enum';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-todo-item',
@@ -34,7 +36,7 @@ export class TodoItemComponent {
   private readonly _dialog = inject(MatDialog);
   private readonly _cookieService = inject(CookieService);
   private readonly _httpClient = inject(HttpClient);
-
+  private readonly _destroyRef = inject(DestroyRef);
   readonly todoSignal = input.required<TodoModel>();
 
   onTaskToggle(event: MatCheckboxChange): void {
@@ -64,7 +66,7 @@ export class TodoItemComponent {
     });
   }
 
-  createEvent() {
+  createEvent(): void {
     const event = {
       summary: 'dylan test from angular',
       start: {
@@ -85,7 +87,7 @@ export class TodoItemComponent {
       const headers = new HttpHeaders({
         Authorization: `Bearer ${googleAuthToken}`,
         'Content-Type': 'application/json',
-        skip: "true"
+        skip: 'true',
       });
 
       this._httpClient
@@ -94,6 +96,7 @@ export class TodoItemComponent {
           event,
           { headers }
         )
+        .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe({
           next: (response) => {
             console.log('Event created:', response);

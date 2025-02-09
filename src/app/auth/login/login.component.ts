@@ -74,7 +74,11 @@ export class LoginComponent extends AuthComponent implements OnInit {
     (state: UserState) => state.isLoggedOut
   );
 
-  private storeTokenInCookie(token: string, expiryDate: Date): void {
+  private storeTokenInCookie(
+    token: string,
+    expiryDate: Date,
+    tokenKey?: string
+  ): void {
     const expireDate = new Date(expiryDate);
 
     const utcExpireDate = new Date(
@@ -88,7 +92,7 @@ export class LoginComponent extends AuthComponent implements OnInit {
       )
     );
 
-    this._cookieService.set(this.tokenKey, token, {
+    this._cookieService.set(tokenKey ?? this.tokenKey, token, {
       expires: utcExpireDate,
       sameSite: 'Lax',
       path: '/',
@@ -101,6 +105,7 @@ export class LoginComponent extends AuthComponent implements OnInit {
     sessionStorage.removeItem(this.tokenKey);
   }
 
+  // this is only triggered when use clickc on google button to login
   private initiateGoogleSignIn(): void {
     this._socialAuthService.authState
       .pipe(
@@ -128,10 +133,17 @@ export class LoginComponent extends AuthComponent implements OnInit {
           }
 
           if (googleUser && googleUser.idToken) {
-            this._cookieService.set(
-              SessionStorageEnum.GOOGLE_ACCESS_TOKEN,
-              googleUser.authToken
+            const expiryDate = new Date();
+            expiryDate.setTime(expiryDate.getTime() + 60 * 60 * 1000); // Expiry time in milliseconds
+
+            this._cookieService.delete(SessionStorageEnum.GOOGLE_ACCESS_TOKEN);
+
+            this.storeTokenInCookie(
+              googleUser.authToken,
+              expiryDate,
+              SessionStorageEnum.GOOGLE_ACCESS_TOKEN
             );
+
             return this._authService.loginInWithGoogle$(googleUser.idToken);
           }
 
