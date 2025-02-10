@@ -1,11 +1,19 @@
-<button mat-icon-button mat-dialog-close type="button">
-  <mat-icon>close</mat-icon>
-</button>
+<h2
+  mat-dialog-title
+  class="!flex items-center justify-start !px-6 !font-semibold"
+>
+  {{ data?.todo?.id ? "Update" : "Create" }} new todo item
 
-<mat-dialog-content class="mat-typography">
-  <h2 mat-dialog-title>
-    {{ data?.todo?.id ? "Update" : "Create" }} new todo item
-  </h2>
+  <button
+    mat-icon-button
+    mat-dialog-close
+    type="button"
+    class="!absolute right-3"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+<mat-dialog-content>
   @if(form) {
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <!-- TITLE -->
@@ -48,12 +56,21 @@
       </mat-select>
     </mat-form-field>
 
-    <button
+    <!-- <button
       class="w-full submit p-4 rounded-[2rem] font-bold text-white bg-teal-950 hover:bg-white border-1 hover:text-teal-950 hover:border-(bg-teal=950)"
       type="submit"
     >
       Submit
-    </button>
+    </button> -->
   </form>
   }
 </mat-dialog-content>
+
+<mat-dialog-actions>
+  <button
+    class="w-full submit p-4 rounded-[2rem] font-bold text-white bg-teal-950 hover:bg-white border-1 hover:text-teal-950 hover:border-(bg-teal=950)"
+    type="submit"
+  >
+    Submit
+  </button>
+</mat-dialog-actions>

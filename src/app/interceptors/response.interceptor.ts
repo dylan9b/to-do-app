@@ -38,9 +38,7 @@ export class ResponseInterceptor implements HttpInterceptor {
           switch (event.status) {
             case 200:
               if (!isGoogleEvent) {
-                this._snackBar.open(event.body!.message, 'Success', {
-                  duration: 3000,
-                });
+                this._snackBar.open(event.body!.message, 'Success');
               } else {
                 this._snackBar
                   .open('Task created on google calendar', 'View')

@@ -1,33 +1,37 @@
 <section
-  class="flex flex-col gap-2 items-center justify-center h-screen z-[1] relative bg-no-repeat bg-cover bg-center p-4"
+  class="flex flex-col gap-2 items-center justify-start h-screen z-[1] relative bg-no-repeat bg-cover bg-center p-4 md:pt-40"
 >
-  <button
-    type="button"
-    class="flex items-center justify-center rounded-full bg-[var(--red-dark)] text-white text-2xl p-4"
-    (click)="logOut()"
-  >
-    <mat-icon>logout</mat-icon>
-  </button>
-
   <div class="w-full md:w-3/4 lg:w-2/3 xl:w-2/5 flex flex-col gap-14">
     <h1
-      class="text-white font-extrabold text-[3rem] flex flex-row items-center justify-between"
+      class="text-white font-extrabold text-[3rem] flex flex-row items-center justify-between tracking-[1rem]"
     >
       TODOS
       <button
         type="button"
-        class="flex items-center justify-center rounded-full bg-black text-white text-2xl p-4"
+        class="flex items-center justify-center rounded-full bg-[var(--blue-dark)] border-1 text-white text-2xl p-4 hover:bg-white hover:text-[var(--blue-dark)] duration-500 hover:rotate-180 hover:text-4xl ease-out"
         (click)="openCreateTodoModal()"
       >
         <mat-icon>add</mat-icon>
       </button>
     </h1>
     <div
-      class="flex flex-col items-center justify-between gap-4 rounded-lg bg-white p-6 shadow-md outline outline-black/5 dark:bg-gray-800 max-h-[50vh] overflow-auto"
+      class="flex flex-col items-center justify-between gap-4 rounded-lg bg-white p-6 outline outline-black/5 max-h-[50vh] overflow-auto"
     >
       @for(todo of todosSignal(); track todo?.id) {
-      <app-todo-item class="w-full" [todoSignal]="todo"></app-todo-item>
+      <app-todo-item
+        class="w-full border-b last:border-0 border-gray-300"
+        [todoSignal]="todo"
+      ></app-todo-item>
       }
+    </div>
+    <div class="flex items-center justify-end">
+      <button
+        type="button"
+        class="flex items-center justify-end rounded-full bg-[var(--red-dark)] text-white text-2xl p-4 duration-500 hover:rotate-180 hover:text-4xl ease-out hover:bg-white hover:text-[var(--red-dark)]"
+        (click)="logOut()"
+      >
+        <mat-icon>logout</mat-icon>
+      </button>
     </div>
   </div>
 </section>

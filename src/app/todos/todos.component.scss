@@ -15,5 +15,5 @@
 }
 
 section {
-  @include background-setup(black, $blue);
+  @include background-setup($blue-dark);
 }

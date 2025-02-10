@@ -13,17 +13,30 @@ body {
 
 body {
   font-family: var(--font-primary);
+
+  ::-webkit-scrollbar {
+    width: 10px;
+
+    &-track {
+      border-radius: 10px;
+      background: transparent;
+    }
+
+    &-thumb {
+      background: lightgrey;
+      border-radius: 10px;
+
+      &:hover {
+        background: grey;
+      }
+    }
+  }
 }
 
 :root {
-  .mat-mdc-snack-bar-label {
-    font-family: var(--font-primary) !important;
-  }
-  .mat-mdc-snack-bar-action {
-    font-family: var(--font-primary);
-  }
-
-  .mat-mdc-menu-item-text {
-    font-family: var(--font-primary) !important;
-  }
+  --mat-sys-label-large-font: var(--font-primary);
+  --mat-sys-headline-small-font: var(--font-primary);
+  --mat-sys-body-medium-font: var(--font-primary);
+  --mat-sys-body-large-font: var(--font-primary);
+  --mat-sys-corner-extra-large: 2px;
 }
