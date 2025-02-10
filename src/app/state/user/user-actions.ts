@@ -6,5 +6,7 @@ export const userActions = createActionGroup({
     Logout: emptyProps(),
     'Logout Success': props<{ isLoggedOut: boolean }>(),
     'Logout Failure': props<{ error: string }>(),
+
+    isGoogleLogin: props<{ isGoogleLogin: boolean }>(),
   },
 });

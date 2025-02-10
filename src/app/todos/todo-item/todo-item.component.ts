@@ -22,6 +22,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { SessionStorageEnum } from '@shared/sessionStorage.enum';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { isGoogleLoginSelector } from '@state/user/user-selector';
 
 @Component({
   selector: 'app-todo-item',
@@ -38,6 +39,10 @@ export class TodoItemComponent {
   private readonly _httpClient = inject(HttpClient);
   private readonly _destroyRef = inject(DestroyRef);
   readonly todoSignal = input.required<TodoModel>();
+
+  readonly isGoogleLoginSignal = this._store.selectSignal(
+    isGoogleLoginSelector
+  );
 
   onTaskToggle(event: MatCheckboxChange): void {
     const request: Partial<UpdateTodoRequestModel> = {

@@ -33,7 +33,11 @@
       <mat-icon>edit</mat-icon>
       <span>Edit</span>
     </button>
-    <button mat-menu-item (click)="createEvent()">
+    <button
+      mat-menu-item
+      (click)="createEvent()"
+      [disabled]="!isGoogleLoginSignal()"
+    >
       <mat-icon>event</mat-icon>
       <span>Google Calendar</span>
     </button>

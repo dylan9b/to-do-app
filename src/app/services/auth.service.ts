@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { DestroyRef, inject, Injectable } from '@angular/core';
 import { catchError, from, map, Observable } from 'rxjs';
 import { LoginResponseModel } from '@auth/login/_model/login-response.model';
 import { environment } from '../environment/environment';
@@ -13,6 +13,7 @@ import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { Store } from '@ngrx/store';
 import { AppState } from '@state/app.state';
 import { userActions } from '@state/user/user-actions';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
@@ -24,8 +25,9 @@ export class AuthService {
   private readonly _platformService = inject(PlatformService);
   private readonly _socialAuthService = inject(SocialAuthService);
   private readonly _store = inject(Store<AppState>);
+  private readonly _destroyRef = inject(DestroyRef);
 
-  private readonly tokenKey = SessionStorageEnum.ACCESS_TOKEN;
+  private readonly _tokenKey = SessionStorageEnum.ACCESS_TOKEN;
 
   loginInWithGoogle$(tokenId: string): Observable<LoginResponseModel> {
     return this._http
@@ -84,9 +86,13 @@ export class AuthService {
   }
 
   logOut(): void {
-    this._store.dispatch(userActions.logout());
-    this._cookieService.delete(this.tokenKey);
-    this._platformService.removeItemSessionStorage(this.tokenKey);
-    this._router.navigate(['/auth', 'login']);
+    from(this._router.navigate(['/auth', 'login']))
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe(() => {
+        this._store.dispatch(userActions.logout());
+        this._cookieService.delete(SessionStorageEnum.GOOGLE_ACCESS_TOKEN);
+        this._cookieService.delete(this._tokenKey);
+        this._platformService.removeItemSessionStorage(this._tokenKey);
+      });
   }
 }

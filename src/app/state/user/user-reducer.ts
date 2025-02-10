@@ -6,13 +6,13 @@ import { UserState } from './user-state';
 export const initialState: UserState = {
   isLoggedOut: null,
   status: STATUS.PENDING,
-  loggedInThroughGoogle: null,
+  isGoogleLogin: null,
 };
 
 export const userReducer = createReducer(
   initialState,
 
-  // USER LOGOUT FROM GOOGLE
+  // USER LOGOUT
   on(userActions.logout, (state) => ({
     ...state,
     status: STATUS.LOADING,
@@ -27,4 +27,9 @@ export const userReducer = createReducer(
     status: STATUS.ERROR,
     error,
   })),
+
+  on(userActions.isGoogleLogin, (state, { isGoogleLogin }) => ({
+    ...state,
+    isGoogleLogin,
+  }))
 );

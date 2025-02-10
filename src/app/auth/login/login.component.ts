@@ -30,6 +30,7 @@ import { from, map, of, switchMap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '@state/app.state';
 import { UserState } from '@state/user/user-state';
+import { userActions } from '@state/user/user-actions';
 
 @Component({
   selector: 'app-login',
@@ -153,6 +154,9 @@ export class LoginComponent extends AuthComponent implements OnInit {
       )
       .subscribe((response) => {
         if (response) {
+          this._store.dispatch(
+            userActions.isGoogleLogin({ isGoogleLogin: true })
+          );
           this.clearAllTokens();
           this.storeTokenInCookie(
             response?.data?.accessToken,
