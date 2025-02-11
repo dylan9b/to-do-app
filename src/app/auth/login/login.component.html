@@ -11,7 +11,10 @@
       (ngSubmit)="onSubmit()"
     >
       <!-- EMAIL -->
-      <fieldset class="relative flex items-center">
+      <fieldset
+        class="relative flex items-center"
+        [class.error]="isFormSubmittedSignal() && form.get('email')?.invalid"
+      >
         <input
           matInput
           placeholder="Email"
@@ -26,7 +29,10 @@
       </fieldset>
 
       <!-- PASSWORD -->
-      <fieldset class="relative flex items-center">
+      <fieldset
+        class="relative flex items-center"
+        [class.error]="isFormSubmittedSignal() && form.get('password')?.invalid"
+      >
         <input
           matInput
           formControlName="password"
@@ -54,6 +60,10 @@
           }}</mat-icon>
         </button>
       </fieldset>
+      <mat-hint
+        class="!text-center !text-[12px] text-white font-medium mt-[-1.5rem]"
+        >Password should be at least 8 characters long</mat-hint
+      >
 
       <!-- REMEMBER ME -->
       <fieldset>
@@ -61,9 +71,10 @@
       </fieldset>
 
       <button
-        class="submit transition-all duration-500 ease-in-out p-4 rounded-[2rem] font-bold text-white bg-[var(--blue-dark)] hover:bg-white hover:text-[var(--blue-dark)] hover:transition-all hover:duration-500 hover:ease-in-out cursor-pointer"
+        class="submit transition-all duration-500 ease-in-out p-4 rounded-[2rem] font-bold text-white bg-[var(--blue-dark)] hover:bg-white hover:text-[var(--blue-dark)] cursor-pointer"
         type="submit"
-        [disabled]="form.invalid"
+        appClickOutside
+        (clickOutside)="onClickOutside($event)"
       >
         Login
       </button>

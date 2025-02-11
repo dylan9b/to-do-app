@@ -1,5 +1,4 @@
 @if(todoSignal()) {
-
 <article class="w-full flex flex-row items-center justify-between p-4 bg-white">
   <fieldset class="flex-[2_1_0]">
     <mat-checkbox
@@ -13,7 +12,7 @@
   </fieldset>
 
   <small class="flex-[2_1_0] visual" [class.complete]="todoSignal().isCompleted"
-    >Due Date {{ todoSignal().dueDate | date : "shortDate" }}</small
+    >{{ todoSignal().dueDate | date : "longDate" }}</small
   >
 
   <button

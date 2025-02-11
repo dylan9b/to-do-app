@@ -73,13 +73,13 @@ export class TodoItemComponent {
 
   createEvent(): void {
     const event = {
-      summary: 'dylan test from angular',
+      summary: this.todoSignal().title,
       start: {
-        date: '2025-02-09',
+        date: this.todoSignal().dueDate,
         timeZone: 'Europe/Paris',
       },
       end: {
-        date: '2025-02-09',
+        date: this.todoSignal().dueDate,
         timeZone: 'Europe/Paris',
       },
     };

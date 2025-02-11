@@ -12,14 +12,11 @@ import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TodoResponseModel } from '../todos/_model/response/todo-response.model';
-import { PlatformService } from '@services/platform.service';
-import { SessionStorageEnum } from '@shared/sessionStorage.enum';
 
 @Injectable()
 export class ResponseInterceptor implements HttpInterceptor {
   private readonly _router = inject(Router);
   private readonly _snackBar = inject(MatSnackBar);
-  private readonly _platformService = inject(PlatformService);
 
   intercept(
     req: HttpRequest<unknown>,
@@ -57,10 +54,7 @@ export class ResponseInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         switch (error.status) {
           case 401:
-            this._platformService.removeItemSessionStorage(
-              SessionStorageEnum.ACCESS_TOKEN
-            );
-            this._snackBar.open(error?.error?.message, 'Aunautorized');
+            this._snackBar.open(error?.error?.message, 'Unauthorized');
             this._router.navigate(['/auth', 'login']);
             break;
           case 500:

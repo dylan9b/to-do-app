@@ -4,6 +4,7 @@ import {
   DestroyRef,
   inject,
   OnInit,
+  signal,
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,13 +15,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '@services/auth.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Router, RouterLink } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
+import { CookieOptions, CookieService } from 'ngx-cookie-service';
 import { MatRippleModule } from '@angular/material/core';
 import { AuthRequestModel } from '../_model/auth-request.model';
 import { AuthComponent } from '../auth.component';
 import { LoginFormControl } from './_model/login-form-control.model';
 import { SessionStorageEnum } from '@shared/sessionStorage.enum';
-import { PlatformService } from '@services/platform.service';
 import {
   GoogleLoginProvider,
   GoogleSigninButtonModule,
@@ -31,6 +31,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@state/app.state';
 import { UserState } from '@state/user/user-state';
 import { userActions } from '@state/user/user-actions';
+import { ClickOutsideDirective } from '../../directives/click-outisde-element.directive';
 
 @Component({
   selector: 'app-login',
@@ -45,6 +46,7 @@ import { userActions } from '@state/user/user-actions';
     RouterLink,
     MatRippleModule,
     GoogleSigninButtonModule,
+    ClickOutsideDirective,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -56,12 +58,11 @@ export class LoginComponent extends AuthComponent implements OnInit {
   private readonly _destroyRef = inject(DestroyRef);
   private readonly _cookieService = inject(CookieService);
   private readonly _router = inject(Router);
-  private readonly _platformService = inject(PlatformService);
   private readonly _socialAuthService = inject(SocialAuthService);
   private readonly _store = inject(Store<AppState>);
+  private readonly _tokenKey = SessionStorageEnum.ACCESS_TOKEN;
 
-  private readonly tokenKey = SessionStorageEnum.ACCESS_TOKEN;
-
+  isFormSubmittedSignal = signal(false);
   constructor() {
     super();
     this.form = this.populateForm(new LoginFormControl());
@@ -78,32 +79,43 @@ export class LoginComponent extends AuthComponent implements OnInit {
   private storeTokenInCookie(
     token: string,
     expiryDate: Date,
-    tokenKey?: string
+    tokenKey = SessionStorageEnum.ACCESS_TOKEN,
+    isSession = false
   ): void {
-    const expireDate = new Date(expiryDate);
-
-    const utcExpireDate = new Date(
-      Date.UTC(
-        expireDate.getFullYear(),
-        expireDate.getMonth(),
-        expireDate.getDate(),
-        expireDate.getHours(),
-        expireDate.getMinutes(),
-        expireDate.getSeconds()
-      )
-    );
-
-    this._cookieService.set(tokenKey ?? this.tokenKey, token, {
-      expires: utcExpireDate,
+    let cookieOptions: CookieOptions = {
       sameSite: 'Lax',
       path: '/',
       domain: 'localhost',
+    };
+
+    if (!isSession) {
+      const expireDate = new Date(expiryDate);
+
+      const utcExpireDate = new Date(
+        Date.UTC(
+          expireDate.getFullYear(),
+          expireDate.getMonth(),
+          expireDate.getDate(),
+          expireDate.getHours(),
+          expireDate.getMinutes(),
+          expireDate.getSeconds()
+        )
+      );
+
+      cookieOptions = {
+        ...cookieOptions,
+        expires: utcExpireDate,
+      };
+    }
+
+    this._cookieService.set(tokenKey, token, {
+      ...cookieOptions,
     });
   }
 
   private clearAllTokens(): void {
-    this._cookieService.delete(this.tokenKey);
-    sessionStorage.removeItem(this.tokenKey);
+    this._cookieService.delete(this._tokenKey);
+    sessionStorage.removeItem(this._tokenKey);
   }
 
   // this is only triggered when use clickc on google button to login
@@ -168,6 +180,7 @@ export class LoginComponent extends AuthComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.isFormSubmittedSignal.set(true);
     if (this.form.valid) {
       const { email, password, rememberMe } = this.form.value;
       const request: AuthRequestModel = {
@@ -181,19 +194,22 @@ export class LoginComponent extends AuthComponent implements OnInit {
         .subscribe((response) => {
           this.clearAllTokens();
 
-          if (rememberMe) {
-            this.storeTokenInCookie(
-              response?.data?.accessToken,
-              response?.data?.expiryDate
-            );
-          } else {
-            this._platformService.setItemSessionStorage(
-              this.tokenKey,
-              response?.data?.accessToken
-            );
-          }
+          this.storeTokenInCookie(
+            response?.data?.accessToken,
+            response?.data?.expiryDate,
+            undefined,
+            !rememberMe
+          );
+
           this._router.navigate(['/todos']);
         });
+    } else {
+      this.form.markAsDirty();
     }
+  }
+
+  onClickOutside(event: MouseEvent): void {
+    event.stopPropagation();
+    this.isFormSubmittedSignal.set(false);
   }
 }

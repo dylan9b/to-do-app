@@ -7,7 +7,6 @@ import { RegisterResponseModel } from '@auth/register/_model/register-response.m
 import { AuthRequestModel } from '@auth/_model/auth-request.model';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
-import { PlatformService } from './platform.service';
 import { SessionStorageEnum } from '@shared/sessionStorage.enum';
 import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { Store } from '@ngrx/store';
@@ -22,12 +21,9 @@ export class AuthService {
   private readonly _http = inject(HttpClient);
   private readonly _cookieService = inject(CookieService);
   private readonly _router = inject(Router);
-  private readonly _platformService = inject(PlatformService);
   private readonly _socialAuthService = inject(SocialAuthService);
   private readonly _store = inject(Store<AppState>);
   private readonly _destroyRef = inject(DestroyRef);
-
-  private readonly _tokenKey = SessionStorageEnum.ACCESS_TOKEN;
 
   loginInWithGoogle$(tokenId: string): Observable<LoginResponseModel> {
     return this._http
@@ -91,8 +87,7 @@ export class AuthService {
       .subscribe(() => {
         this._store.dispatch(userActions.logout());
         this._cookieService.delete(SessionStorageEnum.GOOGLE_ACCESS_TOKEN);
-        this._cookieService.delete(this._tokenKey);
-        this._platformService.removeItemSessionStorage(this._tokenKey);
+        this._cookieService.delete(SessionStorageEnum.ACCESS_TOKEN);
       });
   }
 }

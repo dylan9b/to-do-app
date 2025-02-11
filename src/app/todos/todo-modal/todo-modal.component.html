@@ -1,19 +1,18 @@
-<h2
-  mat-dialog-title
-  class="!flex items-center justify-start !px-6 !font-semibold"
->
-  {{ data?.todo?.id ? "Update" : "Create" }} new todo item
-
-  <button
-    mat-icon-button
-    mat-dialog-close
-    type="button"
-    class="!absolute right-3"
-  >
-    <mat-icon>close</mat-icon>
-  </button>
-</h2>
 <mat-dialog-content>
+  <h2
+    mat-dialog-title
+    class="!flex items-center justify-start !px-0 !font-semibold"
+  >
+    <span> {{ data?.todo?.id ? "Update" : "Create" }} new todo item </span>
+    <button
+      mat-icon-button
+      mat-dialog-close
+      type="button"
+      class="!absolute right-0 !px-0"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </h2>
   @if(form) {
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <!-- TITLE -->
@@ -25,7 +24,13 @@
     <!-- DUE DATE -->
     <mat-form-field class="w-full">
       <mat-label>Due Date</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="dueDate" />
+      <input
+        matInput
+        [readonly]="true"
+        [matDatepicker]="picker"
+        formControlName="dueDate"
+        (click)="picker.open()"
+      />
       <mat-datepicker-toggle
         matIconSuffix
         [for]="picker"
@@ -56,21 +61,12 @@
       </mat-select>
     </mat-form-field>
 
-    <!-- <button
-      class="w-full submit p-4 rounded-[2rem] font-bold text-white bg-teal-950 hover:bg-white border-1 hover:text-teal-950 hover:border-(bg-teal=950)"
+    <button
+      class="w-full submit transition-all duration-500 ease-in-out p-4 rounded-[2rem] font-bold text-white bg-[var(--blue-dark)] hover:bg-white hover:text-[var(--blue-dark)] border-white border hover:border-[var(--blue-dark)] cursor-pointer"
       type="submit"
     >
       Submit
-    </button> -->
+    </button>
   </form>
   }
 </mat-dialog-content>
-
-<mat-dialog-actions>
-  <button
-    class="w-full submit p-4 rounded-[2rem] font-bold text-white bg-teal-950 hover:bg-white border-1 hover:text-teal-950 hover:border-(bg-teal=950)"
-    type="submit"
-  >
-    Submit
-  </button>
-</mat-dialog-actions>

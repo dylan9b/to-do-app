@@ -5,7 +5,6 @@ import {
   HttpEvent,
 } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { PlatformService } from '@services/platform.service';
 import { SessionStorageEnum } from '@shared/sessionStorage.enum';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
@@ -13,9 +12,6 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private readonly _cookieService = inject(CookieService);
-  private readonly _platformService = inject(PlatformService);
-
-  private readonly tokenKey = SessionStorageEnum.ACCESS_TOKEN;
 
   intercept(
     req: HttpRequest<unknown>,
@@ -31,9 +27,9 @@ export class AuthInterceptor implements HttpInterceptor {
 
       return next.handle(cloned);
     } else {
-      const accessToken =
-        this._cookieService.get(this.tokenKey) ||
-        this._platformService.getItemSessionStorage(this.tokenKey);
+      const accessToken = this._cookieService.get(
+        SessionStorageEnum.ACCESS_TOKEN
+      );
 
       if (accessToken) {
         cloned = req.clone({
@@ -42,7 +38,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
         return next.handle(cloned);
       } else {
-        this._platformService.removeItemSessionStorage(this.tokenKey);
         return next.handle(req);
       }
     }

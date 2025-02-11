@@ -3,6 +3,7 @@ import {
   Component,
   DestroyRef,
   inject,
+  OnInit,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -18,6 +19,9 @@ import { AuthService } from '@services/auth.service';
 import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { from } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CookieService } from 'ngx-cookie-service';
+import { SessionStorageEnum } from '@shared/sessionStorage.enum';
+import { userActions } from '@state/user/user-actions';
 
 @Component({
   selector: 'app-todos',
@@ -27,18 +31,25 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TodosComponent {
+export class TodosComponent implements OnInit {
   private readonly _store = inject(Store<AppState>);
   private readonly _dialog = inject(MatDialog);
   private readonly _authService = inject(AuthService);
   private readonly _socialAuthService = inject(SocialAuthService);
   private readonly _destroyRef = inject(DestroyRef);
+  private readonly _cookieService = inject(CookieService);
 
   readonly todosSignal = this._store.selectSignal(selectAllTodos);
 
   constructor() {
     this._store.dispatch(todosActions.load({ request: null }));
     this._store.dispatch(priorityActions.load());
+  }
+
+  ngOnInit(): void {
+    if (this._cookieService.get(SessionStorageEnum.GOOGLE_ACCESS_TOKEN)) {
+      this._store.dispatch(userActions.isGoogleLogin({ isGoogleLogin: true }));
+    }
   }
 
   openCreateTodoModal(): void {

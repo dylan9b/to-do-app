@@ -25,7 +25,6 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { priorityReducer } from './state/priority/priority.reducer';
 import { PriorityEffects } from './state/priority/priority.effects';
-import { provideNativeDateAdapter } from '@angular/material/core';
 import { DatePipe } from '@angular/common';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
@@ -34,6 +33,20 @@ import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { environment } from './environment/environment';
 import { userReducer } from '@state/user/user-reducer';
 import { UserEffects } from '@state/user/user-effects';
+import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'yyyy-dd-MM',
+  },
+  display: {
+    dateInput: 'LL',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
@@ -55,7 +68,7 @@ export const appConfig: ApplicationConfig = {
     ),
     provideEffects([TodoEffects, PriorityEffects, UserEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-    provideNativeDateAdapter(),
+    // provideNativeDateAdapter(),
 
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ResponseInterceptor, multi: true },
@@ -78,6 +91,7 @@ export const appConfig: ApplicationConfig = {
         },
       } as SocialAuthServiceConfig,
     },
+    provideMomentDateAdapter(MY_FORMATS),
     DatePipe,
   ],
 };
