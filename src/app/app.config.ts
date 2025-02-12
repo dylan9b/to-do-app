@@ -68,7 +68,6 @@ export const appConfig: ApplicationConfig = {
     ),
     provideEffects([TodoEffects, PriorityEffects, UserEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-    // provideNativeDateAdapter(),
 
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ResponseInterceptor, multi: true },
@@ -76,7 +75,7 @@ export const appConfig: ApplicationConfig = {
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {
-        autoLogin: true,
+        autoLogin: false,
         providers: [
           {
             id: GoogleLoginProvider.PROVIDER_ID,

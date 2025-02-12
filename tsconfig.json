@@ -19,6 +19,7 @@
     "module": "ES2022",
     "paths": {
       "@services/*": ["./src/app/services/*"],
+      "@directives/*": ["./src/app/directives/*"],
       "@shared/*": ["./src/app/shared/*"],
       "@auth/*": ["./src/app/auth/*"],
       "@state/*": ["./src/app/state/*"],

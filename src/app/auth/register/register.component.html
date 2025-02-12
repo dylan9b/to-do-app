@@ -1,5 +1,5 @@
 <section
-  class="flex flex-col gap-2 items-center justify-center h-screen z-[1] relative bg-no-repeat bg-cover bg-center p-4"
+  class="flex flex-col gap-2 items-center justify-center min-h-screen z-[1] relative bg-no-repeat bg-cover bg-center p-4"
 >
   <div class="w-full md:w-4/12 lg:w-1/5 flex flex-col gap-4">
     <h1 class="text-white text-center font-extrabold text-[3rem] w-full">
@@ -11,7 +11,10 @@
       (ngSubmit)="onSubmit()"
     >
       <!-- EMAIL -->
-      <fieldset class="relative flex items-center">
+      <fieldset
+        class="relative flex items-center"
+        [class.error]="isFormSubmittedSignal() && form.get('email')?.invalid"
+      >
         <input
           matInput
           placeholder="Email"
@@ -26,7 +29,10 @@
       </fieldset>
 
       <!-- PASSWORD -->
-      <fieldset class="relative flex items-center">
+      <fieldset
+        class="relative flex items-center"
+        [class.error]="isFormSubmittedSignal() && form.get('password')?.invalid"
+      >
         <input
           matInput
           placeholder="Password"
@@ -40,8 +46,16 @@
           >key</mat-icon
         >
       </fieldset>
-
-      <fieldset class="relative flex items-center">
+      <mat-hint
+        class="!text-center !text-[12px] text-white font-medium mt-[-1.5rem]"
+        >Password should be at least 8 characters long</mat-hint
+      >
+      <fieldset
+        class="relative flex items-center"
+        [class.error]="
+          isFormSubmittedSignal() && form.get('reTypePassword')?.invalid
+        "
+      >
         <input
           matInput
           placeholder="Confirm Password"
@@ -55,11 +69,19 @@
           >key</mat-icon
         >
       </fieldset>
+      @if(isFormSubmittedSignal() && form.get('password')?.value !==
+      form.get('reTypPassword')?.value) {
 
+      <mat-hint
+        class="!text-center !text-[12px] text-white font-medium mt-[-1.5rem]"
+        >Passwords do not match</mat-hint
+      >
+      }
       <button
         class="submit transition-all duration-500 p-4 rounded-[2rem] font-bold text-white bg-[var(--blue-dark)] hover:bg-white hover:text-[var(--blue-dark)] ease-in-out diration-500 cursor-pointer"
         type="submit"
-        [disabled]="form.invalid"
+        appClickOutside
+        (clickOutside)="onClickOutside($event)"
       >
         Sign up
       </button>

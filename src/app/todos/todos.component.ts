@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   inject,
   OnInit,
 } from '@angular/core';
@@ -16,9 +15,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '@services/auth.service';
-import { SocialAuthService } from '@abacritt/angularx-social-login';
-import { from } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CookieService } from 'ngx-cookie-service';
 import { SessionStorageEnum } from '@shared/sessionStorage.enum';
 import { userActions } from '@state/user/user-actions';
@@ -35,8 +31,6 @@ export class TodosComponent implements OnInit {
   private readonly _store = inject(Store<AppState>);
   private readonly _dialog = inject(MatDialog);
   private readonly _authService = inject(AuthService);
-  private readonly _socialAuthService = inject(SocialAuthService);
-  private readonly _destroyRef = inject(DestroyRef);
   private readonly _cookieService = inject(CookieService);
 
   readonly todosSignal = this._store.selectSignal(selectAllTodos);
@@ -60,13 +54,5 @@ export class TodosComponent implements OnInit {
 
   logOut(): void {
     this._authService.logOut();
-  }
-
-  logOutFromGoogle(): void {
-    from(this._socialAuthService.signOut())
-      .pipe(takeUntilDestroyed(this._destroyRef))
-      .subscribe(() => {
-        this._authService.logOut();
-      });
   }
 }

@@ -4,7 +4,6 @@ import {
   DestroyRef,
   inject,
   OnInit,
-  signal,
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -62,7 +61,6 @@ export class LoginComponent extends AuthComponent implements OnInit {
   private readonly _store = inject(Store<AppState>);
   private readonly _tokenKey = SessionStorageEnum.ACCESS_TOKEN;
 
-  isFormSubmittedSignal = signal(false);
   constructor() {
     super();
     this.form = this.populateForm(new LoginFormControl());
@@ -118,7 +116,7 @@ export class LoginComponent extends AuthComponent implements OnInit {
     sessionStorage.removeItem(this._tokenKey);
   }
 
-  // this is only triggered when use clickc on google button to login
+  // this is only triggered when use click on google button to login
   private initiateGoogleSignIn(): void {
     this._socialAuthService.authState
       .pipe(
@@ -203,13 +201,6 @@ export class LoginComponent extends AuthComponent implements OnInit {
 
           this._router.navigate(['/todos']);
         });
-    } else {
-      this.form.markAsDirty();
     }
-  }
-
-  onClickOutside(event: MouseEvent): void {
-    event.stopPropagation();
-    this.isFormSubmittedSignal.set(false);
   }
 }

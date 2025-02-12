@@ -38,6 +38,7 @@ export class AuthComponent {
   private readonly _formBuilder = inject(FormBuilder);
 
   hidePasswordSignal = signal(true);
+  isFormSubmittedSignal = signal(false);
 
   togglePassword(event: MouseEvent) {
     event.stopPropagation();
@@ -46,5 +47,10 @@ export class AuthComponent {
 
   populateForm(formControl: AuthFormControl): FormGroup {
     return this._formBuilder.group(formControl);
+  }
+
+  onClickOutside(event: MouseEvent): void {
+    event.stopPropagation();
+    this.isFormSubmittedSignal.set(false);
   }
 }

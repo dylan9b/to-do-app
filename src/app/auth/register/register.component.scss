@@ -10,6 +10,14 @@
       }
     }
 
+    &.error {
+      > mat-icon {
+        opacity: 1;
+        color: var(--red-dark);
+        @include grow-and-shrink(0.25s, 1.5);
+      }
+    }
+
     > mat-icon {
       opacity: 0.2;
     }
@@ -17,7 +25,7 @@
     &:focus-within {
       > mat-icon {
         opacity: 1;
-        color: var(--red);
+        color: var(--blue);
         @include grow-and-shrink(0.25s, 1.5);
       }
     }
