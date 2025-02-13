@@ -7,4 +7,9 @@ export const selectTodoState = (state: AppState) => state?.todos;
 const { selectAll, selectTotal } = todosAdapter.getSelectors();
 
 export const selectAllTodos = createSelector(selectTodoState, selectAll);
-export const selectNotesTotal = createSelector(selectTodoState, selectTotal);
+export const selectTodosTotal = createSelector(selectTodoState, selectTotal);
+
+export const selectAllCompletedTotal = createSelector(
+  selectAllTodos,
+  (todos) => todos?.filter((todo) => todo?.isCompleted).length
+);
