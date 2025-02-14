@@ -1,3 +1,5 @@
+@use "mixins/animation-mixin" as *;
+
 :host {
   ::ng-deep {
     mat-checkbox {

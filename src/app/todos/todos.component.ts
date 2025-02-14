@@ -46,12 +46,12 @@ export class TodosComponent implements OnInit {
   private readonly _dialog = inject(MatDialog);
   private readonly _authService = inject(AuthService);
   private readonly _cookieService = inject(CookieService);
-
-  readonly todosSignal = this._store.selectSignal(selectAllTodos);
   private readonly totalTodoSignal = this._store.selectSignal(selectTodosTotal);
   private readonly totalTodoCompletedSignal = this._store.selectSignal(
     selectAllCompletedTotal
   );
+  
+  readonly todosSignal = this._store.selectSignal(selectAllTodos);
   readonly progressBarValueSignal = computed(
     () => (this.totalTodoCompletedSignal() / this.totalTodoSignal()) * 100
   );

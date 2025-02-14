@@ -29,6 +29,7 @@ export class TodoEffects {
       switchMap((action) =>
         from(this._todoService.updateTodo$(action?.request)).pipe(
           map((response) => {
+            console.log('response', response);
             const updatedTodo: Update<TodoModel> = {
               id: response?.todo?.id,
               changes: { ...response?.todo },

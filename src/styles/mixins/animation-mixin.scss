@@ -1,4 +1,4 @@
-@mixin grow-and-shrink($duration: 0.5s, $scale: 1.5) {
+@mixin grow-and-shrink($duration: 0.25s, $scale: 1.5) {
   @keyframes growAndShrink {
     0% {
       transform: scale(1);

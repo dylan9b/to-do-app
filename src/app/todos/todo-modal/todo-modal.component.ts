@@ -104,7 +104,7 @@ export class TodoModalComponent {
     const { id, isCompleted, dueDate, title, priorityId } = this.form.value;
     const date = this._datePipe.transform(dueDate, 'YYYY-MM-dd') as string;
 
-    const request: UpdateTodoRequestModel = {
+    const request: Partial<UpdateTodoRequestModel> = {
       id,
       isCompleted,
       dueDate: date,

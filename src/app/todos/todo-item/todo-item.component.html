@@ -1,26 +1,25 @@
 @if(todoSignal()) {
 <article class="w-full flex flex-row items-center justify-between p-4 bg-white">
-  <fieldset class="flex-[2_1_0]">
-    <mat-checkbox
-      [checked]="!!todoSignal().isCompleted"
-      (change)="onTaskToggle($event)"
-    >
-      <span class="visual" [class.complete]="todoSignal().isCompleted">{{
-        todoSignal().title
-      }}</span>
-    </mat-checkbox>
-  </fieldset>
+  <mat-icon
+    class="mr-8 text-[1rem] !h-4 !w-4 opacity-20 cursor-pointer"
+    (click)="pinTodo()"
+    [@pinUnpin]="todoSignal().isPinned ? 'pinned' : 'unPinned'"
+    >push_pin</mat-icon
+  >
 
-  <small class="flex-[2_1_0] visual" [class.complete]="todoSignal().isCompleted"
+  <mat-icon
+    class="mr-8 text-[1rem] !h-4 !w-4 opacity-20 cursor-pointer"
+    (click)="completeTodo()"
+    [@completeIncomplete]="todoSignal().isCompleted ? 'complete' : 'inComplete'"
+    >task_alt</mat-icon
+  >
+  <small
+    class="flex-[2_1_0] visual"
+    [class.complete]="todoSignal().isCompleted"
     >{{ todoSignal().dueDate | date : "longDate" }}</small
   >
 
-  <button
-    mat-icon-button
-    class="flex-1"
-    [matMenuTriggerFor]="menu"
-    aria-label="Example icon-button with a menu"
-  >
+  <button mat-icon-button class="flex-1 text-right" [matMenuTriggerFor]="menu">
     <mat-icon>more_vert</mat-icon>
   </button>
   <mat-menu #menu="matMenu">
@@ -34,7 +33,7 @@
     </button>
     <button
       mat-menu-item
-      (click)="createEvent()"
+      (click)="createGoogleEvent()"
       [disabled]="!isGoogleLoginSignal()"
     >
       <mat-icon>event</mat-icon>

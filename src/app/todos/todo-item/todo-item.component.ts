@@ -8,10 +8,6 @@ import {
 import { TodoModel } from '../_model/todo.model';
 import { AppState } from '../../state/app.state';
 import { Store } from '@ngrx/store';
-import {
-  MatCheckboxChange,
-  MatCheckboxModule,
-} from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { UpdateTodoRequestModel } from '../_model/request/update-todo-request.model';
 import { todosActions } from '../../state/todo/todo-actions';
@@ -23,12 +19,14 @@ import { CookieService } from 'ngx-cookie-service';
 import { SessionStorageEnum } from '@shared/sessionStorage.enum';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isGoogleLoginSelector } from '@state/user/user-selector';
+import { Animations } from '../../animations/animations';
 
 @Component({
   selector: 'app-todo-item',
-  imports: [MatCheckboxModule, MatIconModule, DatePipe, MatMenuModule],
+  imports: [MatIconModule, DatePipe, MatMenuModule],
   templateUrl: './todo-item.component.html',
   styleUrl: './todo-item.component.scss',
+  animations: [Animations.pinUnpin, Animations.completeIncomplete],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -38,27 +36,32 @@ export class TodoItemComponent {
   private readonly _cookieService = inject(CookieService);
   private readonly _httpClient = inject(HttpClient);
   private readonly _destroyRef = inject(DestroyRef);
-  readonly todoSignal = input.required<TodoModel>();
 
+  readonly todoSignal = input.required<TodoModel>();
   readonly isGoogleLoginSignal = this._store.selectSignal(
     isGoogleLoginSelector
   );
 
-  onTaskToggle(event: MatCheckboxChange): void {
+  completeTodo(): void {
     const request: Partial<UpdateTodoRequestModel> = {
       id: this.todoSignal()?.id,
-      isCompleted: event?.checked,
+      isCompleted: !this.todoSignal().isCompleted,
     };
 
-    this._store.dispatch(
-      todosActions.update({
-        request,
-      })
-    );
+    this._store.dispatch(todosActions.update({ request }));
   }
 
   removeTodo(): void {
     this._store.dispatch(todosActions.delete({ id: this.todoSignal().id }));
+  }
+
+  pinTodo(): void {
+    const request: Partial<UpdateTodoRequestModel> = {
+      id: this.todoSignal().id,
+      isPinned: !this.todoSignal().isPinned,
+    };
+
+    this._store.dispatch(todosActions.update({ request }));
   }
 
   editTodo(): void {
@@ -71,7 +74,7 @@ export class TodoItemComponent {
     });
   }
 
-  createEvent(): void {
+  createGoogleEvent(): void {
     const event = {
       summary: this.todoSignal().title,
       start: {

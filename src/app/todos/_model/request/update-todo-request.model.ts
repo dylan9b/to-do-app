@@ -4,5 +4,7 @@ export interface UpdateTodoRequestModel {
   userId?: string;
   title: string;
   isCompleted: boolean;
+  isPinned: boolean;
+  order: number;
   dueDate: string;
 }

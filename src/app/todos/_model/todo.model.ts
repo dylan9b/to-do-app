@@ -1,7 +1,9 @@
 export interface TodoModel {
   id: string;
   title: string;
-  isCompleted: false;
+  isCompleted: boolean;
+  isPinned: boolean;
+  order: number;
   dueDate: Date;
   createdAt: Date;
   updatedAt: Date;

@@ -12,10 +12,11 @@
       }
     }
   }
-  
+
   --mdc-linear-progress-active-indicator-color: #{$blue-dark};
   --mdc-linear-progress-track-height: 12px;
   --mdc-linear-progress-active-indicator-height: 12px;
+  --mdc-linear-progress-track-color: #{$gray-light};
 }
 
 section {

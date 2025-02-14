@@ -3,4 +3,5 @@ export interface TodoRequestModel {
   searchTerm: string;
   priorityId: string;
   isCompleted: boolean;
+  isPinned: boolean;
 }

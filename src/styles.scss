@@ -23,7 +23,7 @@ body {
     }
 
     &-thumb {
-      background: lightgrey;
+      background-color: var(--gray-light);
       border-radius: 10px;
 
       &:hover {

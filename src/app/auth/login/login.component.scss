@@ -23,7 +23,7 @@
       > mat-icon {
         opacity: 1;
         color: var(--red-dark);
-        @include grow-and-shrink(0.25s, 1.5);
+        @include grow-and-shrink();
       }
     }
     > mat-icon {
@@ -34,7 +34,7 @@
       > mat-icon {
         opacity: 1;
         color: var(--blue);
-        @include grow-and-shrink(0.25s, 1.5);
+        @include grow-and-shrink();
       }
     }
   }
