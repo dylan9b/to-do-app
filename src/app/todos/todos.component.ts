@@ -25,6 +25,15 @@ import { SessionStorageEnum } from '@shared/sessionStorage.enum';
 import { userActions } from '@state/user/user-actions';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DecimalPipe } from '@angular/common';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDragPlaceholder,
+  CdkDropList,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
+import { TodoModel } from './_model/todo.model';
+import { UpdateTodoRequestModel } from './_model/request/update-todo-request.model';
 
 @Component({
   selector: 'app-todos',
@@ -34,7 +43,10 @@ import { DecimalPipe } from '@angular/common';
     MatIconModule,
     MatProgressBarModule,
     TodoItemComponent,
-    DecimalPipe
+    DecimalPipe,
+    CdkDropList,
+    CdkDrag,
+    CdkDragPlaceholder,
   ],
   templateUrl: './todos.component.html',
   styleUrl: './todos.component.scss',
@@ -50,7 +62,7 @@ export class TodosComponent implements OnInit {
   private readonly totalTodoCompletedSignal = this._store.selectSignal(
     selectAllCompletedTotal
   );
-  
+
   readonly todosSignal = this._store.selectSignal(selectAllTodos);
   readonly progressBarValueSignal = computed(
     () => (this.totalTodoCompletedSignal() / this.totalTodoSignal()) * 100
@@ -75,5 +87,22 @@ export class TodosComponent implements OnInit {
 
   logOut(): void {
     this._authService.logOut();
+  }
+
+  drop(event: CdkDragDrop<TodoModel>): void {
+    moveItemInArray(
+      this.todosSignal(),
+      event.previousIndex,
+      event.currentIndex
+    );
+
+    const droppedItem = this.todosSignal()[event.currentIndex];
+
+    const request: Partial<UpdateTodoRequestModel> = {
+      id: droppedItem.id,
+      order: event.currentIndex + 1,
+    };
+
+    this._store.dispatch(todosActions.update({ request }));
   }
 }

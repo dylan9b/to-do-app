@@ -1,5 +1,5 @@
 <section
-  class="flex flex-col gap-2 items-center justify-center md:justify-start min-h-screen z-[1] relative bg-no-repeat bg-cover bg-center p-4 lg:pt-40"
+  class="flex flex-col gap-2 items-center justify-center md:justify-start min-h-screen z-[1] relative bg-no-repeat bg-cover bg-center p-4 md:pt-40"
 >
   <div class="w-full md:w-3/4 lg:w-2/3 xl:w-2/5 flex flex-col gap-14">
     <!-- TITLE -->
@@ -18,7 +18,7 @@
 
     <!-- TODOS -->
     <div
-      class="flex flex-col items-center justify-between gap-4 rounded-lg bg-white p-6"
+      class="flex flex-col items-center justify-between gap-4 rounded-lg bg-white p-6 max-h-[50vh]"
     >
       <div class="w-full flex flex-col items-center justify-center gap-2">
         <mat-progress-bar
@@ -29,12 +29,19 @@
         </mat-progress-bar>
         <small> {{ progressBarValueSignal() | number : "1.2-2" }} % </small>
       </div>
-      <div class="max-h-[50vh] overflow-auto w-full">
+      <div
+        cdkDropList
+        class="max-h-[50vh] overflow-auto w-full example-list"
+        (cdkDropListDropped)="drop($event)"
+      >
         @for(todo of todosSignal(); track todo?.id) {
-        <app-todo-item
-          class="w-full border-b last:border-0 border-gray-300"
-          [todoSignal]="todo"
-        ></app-todo-item>
+        <div class="example-box" cdkDragLockAxis="y" cdkDrag>
+          <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+          <app-todo-item
+            class="w-full border-b last:border-0 border-gray-300"
+            [todoSignal]="todo"
+          ></app-todo-item>
+        </div>
         }
       </div>
     </div>
