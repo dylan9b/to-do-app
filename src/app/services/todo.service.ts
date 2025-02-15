@@ -16,10 +16,10 @@ import { CreateTodoResponseModel } from '../todos/_model/response/create-todo-re
 export class TodoService {
   private readonly _http = inject(HttpClient);
 
-  todos$(request?: TodoRequestModel | null): Observable<TodoModel[]> {
+  todos$(request?: Partial<TodoRequestModel> | null): Observable<TodoModel[]> {
     return this._http
-      .get<TodoModel[]>(`${environment.apiUrl}todos.php`, {
-        params: { ...request },
+      .post<TodoModel[]>(`${environment.apiUrl}todos.php`, {
+        ...request,
       })
       .pipe(
         map((response) => response),

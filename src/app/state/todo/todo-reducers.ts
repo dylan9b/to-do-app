@@ -14,8 +14,9 @@ export const todoReducer = createReducer(
   initialState,
 
   //GET TODOS
-  on(todosActions.load, (state) => ({
+  on(todosActions.load, (state, { request }) => ({
     ...state,
+    request,
     status: STATUS.LOADING,
   })),
   on(todosActions.loadSuccess, (state, { response }) => {

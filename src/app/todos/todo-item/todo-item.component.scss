@@ -1,16 +1,14 @@
 @use "mixins/animation-mixin" as *;
 
-:host {
-  ::ng-deep {
-    mat-checkbox {
-      label {
-        font-family: "Montserrat";
-      }
-    }
-  }
-}
 .visual {
   transition: 0.25s ease-in-out;
+  &:first-of-type {
+    max-width: 5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   &.complete {
     text-decoration: line-through;
     opacity: 0.2;

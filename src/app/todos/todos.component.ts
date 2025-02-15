@@ -34,6 +34,8 @@ import {
 } from '@angular/cdk/drag-drop';
 import { TodoModel } from './_model/todo.model';
 import { UpdateTodoRequestModel } from './_model/request/update-todo-request.model';
+import { Animations } from '../animations/animations';
+import { TodoRequestModel } from './_model/request/todo-request.model';
 
 @Component({
   selector: 'app-todos',
@@ -50,6 +52,7 @@ import { UpdateTodoRequestModel } from './_model/request/update-todo-request.mod
   ],
   templateUrl: './todos.component.html',
   styleUrl: './todos.component.scss',
+  animations: [Animations.pinUnpin, Animations.completeIncomplete],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -64,9 +67,17 @@ export class TodosComponent implements OnInit {
   );
 
   readonly todosSignal = this._store.selectSignal(selectAllTodos);
+  readonly todoItemsLeftSignal = computed(() => {
+    return this.totalTodoSignal() - this.totalTodoCompletedSignal();
+  });
   readonly progressBarValueSignal = computed(
     () => (this.totalTodoCompletedSignal() / this.totalTodoSignal()) * 100
   );
+
+  filters: Partial<TodoRequestModel> | null = {
+    isCompleted: false,
+    isPinned: false,
+  };
 
   constructor() {
     this._store.dispatch(todosActions.load({ request: null }));
@@ -82,6 +93,12 @@ export class TodosComponent implements OnInit {
   openCreateTodoModal(): void {
     import('./todo-modal/todo-modal.component').then((c) => {
       this._dialog.open(c.TodoModalComponent);
+    });
+  }
+
+  openSearchModal(): void {
+    import('./todo-search-modal/todo-search-modal.component').then((c) => {
+      this._dialog.open(c.TodoSearchModalComponent);
     });
   }
 
@@ -104,5 +121,30 @@ export class TodosComponent implements OnInit {
     };
 
     this._store.dispatch(todosActions.update({ request }));
+  }
+
+  private toggleFilter(type: string | null): void {
+    switch (type) {
+      case null:
+        this.filters = null;
+        break;
+      case 'pin':
+        this.filters = {
+          ...this.filters,
+          isPinned: !this.filters?.isPinned,
+        };
+        break;
+      case 'complete':
+        this.filters = {
+          ...this.filters,
+          isCompleted: !this.filters?.isCompleted,
+        };
+        break;
+    }
+  }
+
+  filter(type: 'pin' | 'complete' | null): void {
+    this.toggleFilter(type);
+    this._store.dispatch(todosActions.load({ request: this.filters }));
   }
 }

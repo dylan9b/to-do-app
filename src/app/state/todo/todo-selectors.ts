@@ -13,3 +13,8 @@ export const selectAllCompletedTotal = createSelector(
   selectAllTodos,
   (todos) => todos?.filter((todo) => todo?.isCompleted).length
 );
+
+export const selectSearchTerm = createSelector(
+  selectTodoState,
+  (state) => state.request?.searchTerm ?? null
+);

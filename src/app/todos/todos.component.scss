@@ -2,17 +2,6 @@
 @use "colors" as *;
 
 :host {
-  ::ng-deep {
-    mat-checkbox {
-      .mdc-label {
-        max-width: 5rem;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-    }
-  }
-
   --mdc-linear-progress-active-indicator-color: #{$blue-dark};
   --mdc-linear-progress-track-height: 12px;
   --mdc-linear-progress-active-indicator-height: 12px;

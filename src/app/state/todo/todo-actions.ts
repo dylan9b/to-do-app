@@ -8,7 +8,7 @@ import { CreateTodoRequestModel } from '../../todos/_model/request/create-todo-r
 export const todosActions = createActionGroup({
   source: 'Todos',
   events: {
-    Load: props<{ request: TodoRequestModel | null }>(),
+    Load: props<{ request: Partial<TodoRequestModel> | null }>(),
     'Load Success': props<{ response: TodoModel[] }>(),
     'Load Failure': props<{ error: string }>(),
 

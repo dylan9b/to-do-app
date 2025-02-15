@@ -5,5 +5,5 @@ import { EntityState } from '@ngrx/entity';
 export interface TodoState extends EntityState<TodoModel> {
   error: string | null;
   status: string;
-  request:  TodoRequestModel | null;
+  request:  Partial<TodoRequestModel> | null;
 }

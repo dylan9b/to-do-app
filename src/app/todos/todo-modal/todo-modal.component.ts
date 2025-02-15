@@ -23,8 +23,8 @@ import {
 import { DatePipe } from '@angular/common';
 import { TodoModel } from '../_model/todo.model';
 import { UpdateTodoRequestModel } from '../_model/request/update-todo-request.model';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TodoModalFormControl } from './_model/todo-modal-form-control.model';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-todo-create-modal',
@@ -37,7 +37,7 @@ import { TodoModalFormControl } from './_model/todo-modal-form-control.model';
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
-    MatCheckboxModule,
+    MatSlideToggleModule,
   ],
   providers: [DatePipe],
   templateUrl: './todo-modal.component.html',

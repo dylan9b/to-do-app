@@ -1,25 +1,30 @@
 @if(todoSignal()) {
 <article class="w-full flex flex-row items-center justify-between p-4 bg-white">
   <mat-icon
-    class="mr-8 text-[1rem] !h-4 !w-4 opacity-20 cursor-pointer"
+    class="text-[1rem] !h-4 !w-4 opacity-20 cursor-pointer "
     (click)="pinTodo()"
     [@pinUnpin]="todoSignal().isPinned ? 'pinned' : 'unPinned'"
     >push_pin</mat-icon
   >
 
   <mat-icon
-    class="mr-8 text-[1rem] !h-4 !w-4 opacity-20 cursor-pointer"
+    class="text-[1rem] !h-4 !w-4 opacity-20 cursor-pointer"
     (click)="completeTodo()"
     [@completeIncomplete]="todoSignal().isCompleted ? 'complete' : 'inComplete'"
     >task_alt</mat-icon
   >
+
+  <small class="visual flex-[0.3]" [class.complete]="todoSignal().isCompleted">{{
+    todoSignal().title
+  }}</small>
+
   <small
-    class="flex-[2_1_0] visual"
+    class="visual flex-[0.2]"
     [class.complete]="todoSignal().isCompleted"
     >{{ todoSignal().dueDate | date : "longDate" }}</small
   >
 
-  <button mat-icon-button class="flex-1 text-right" [matMenuTriggerFor]="menu">
+  <button mat-icon-button class="flex-[0.2] text-right" [matMenuTriggerFor]="menu">
     <mat-icon>more_vert</mat-icon>
   </button>
   <mat-menu #menu="matMenu">
