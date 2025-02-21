@@ -42,7 +42,7 @@ export class AuthService {
 
   login$(request: AuthRequestModel): Observable<LoginResponseModel> {
     return this._http
-      .post<LoginResponseModel>(`${environment.apiUrl}login.php`, {
+      .post<LoginResponseModel>(`${environment.apiUrl}login`, {
         ...request,
       })
       .pipe(
@@ -57,7 +57,7 @@ export class AuthService {
 
   register$(request: AuthRequestModel): Observable<RegisterResponseModel> {
     return this._http
-      .post<LoginResponseModel>(`${environment.apiUrl}register.php`, {
+      .post<LoginResponseModel>(`${environment.apiUrl}register`, {
         ...request,
       })
       .pipe(

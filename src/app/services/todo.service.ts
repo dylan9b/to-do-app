@@ -18,7 +18,7 @@ export class TodoService {
 
   todos$(request?: Partial<TodoRequestModel> | null): Observable<TodoModel[]> {
     return this._http
-      .post<TodoModel[]>(`${environment.apiUrl}todos.php`, {
+      .post<TodoModel[]>(`${environment.apiUrl}todos/get`, {
         ...request,
       })
       .pipe(
@@ -33,7 +33,7 @@ export class TodoService {
     request: Partial<UpdateTodoRequestModel>
   ): Observable<UpdateTodoResponseModel> {
     return this._http
-      .put<UpdateTodoResponseModel>(`${environment.apiUrl}update.php`, {
+      .put<UpdateTodoResponseModel>(`${environment.apiUrl}todos/update`, {
         ...request,
       })
       .pipe(
@@ -46,7 +46,7 @@ export class TodoService {
 
   deleteTodo$(id: string): Observable<DeleteTodoResponseModel> {
     return this._http
-      .delete<DeleteTodoResponseModel>(`${environment.apiUrl}delete.php`, {
+      .delete<DeleteTodoResponseModel>(`${environment.apiUrl}todos/delete`, {
         body: { id },
       })
       .pipe(
@@ -61,7 +61,7 @@ export class TodoService {
     request: CreateTodoRequestModel
   ): Observable<CreateTodoResponseModel> {
     return this._http
-      .post<CreateTodoResponseModel>(`${environment.apiUrl}create.php`, {
+      .post<CreateTodoResponseModel>(`${environment.apiUrl}todos/create`, {
         ...request,
       })
       .pipe(

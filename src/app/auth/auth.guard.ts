@@ -13,7 +13,9 @@ export class AuthGuard implements CanActivate {
   canActivate(): boolean {
     const token = this._cookieService.get(SessionStorageEnum.ACCESS_TOKEN);
     if (!token) {
-      this._router.navigate(['/auth', 'login']);
+      if (token.length === null || token.length === 0) {
+        this._router.navigate(['/auth', 'login']);
+      }
       return false;
     }
 

@@ -25,14 +25,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./todos/todos.component').then((m) => m.TodosComponent),
   },
-  {
-    path: '',
-    redirectTo: 'auth/login',
-    pathMatch: 'full',
-  },
-  {
-    path: '**',
-    redirectTo: 'auth/login',
-    // pathMatch: 'full',
-  },
+  // {
+  //   path: '',
+  //   redirectTo: 'auth/login',
+  //   pathMatch: 'full',
+  // },
+  // {
+  //   path: '**',
+  //   redirectTo: 'auth/login',
+  //   pathMatch: 'full',
+  // },
 ];

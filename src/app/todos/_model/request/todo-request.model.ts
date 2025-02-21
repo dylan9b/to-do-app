@@ -1,7 +1,7 @@
 export interface TodoRequestModel {
-  userId: string;
-  searchTerm: string;
-  priorityId: string;
-  isCompleted: boolean;
-  isPinned: boolean;
+  userId: string | null;
+  searchTerm: string | null;
+  priorityId: string | null;
+  isCompleted: boolean | null;
+  isPinned: boolean | null;
 }

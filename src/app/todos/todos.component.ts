@@ -75,8 +75,8 @@ export class TodosComponent implements OnInit {
   );
 
   filters: Partial<TodoRequestModel> | null = {
-    isCompleted: false,
-    isPinned: false,
+    isCompleted: null,
+    isPinned: null,
   };
 
   constructor() {
@@ -133,6 +133,7 @@ export class TodosComponent implements OnInit {
           ...this.filters,
           isPinned: !this.filters?.isPinned,
         };
+
         break;
       case 'complete':
         this.filters = {

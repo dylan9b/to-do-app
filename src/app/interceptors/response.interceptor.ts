@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { DestroyRef, inject, Injectable } from '@angular/core';
 import {
   HttpEvent,
   HttpInterceptor,
@@ -12,11 +12,13 @@ import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TodoResponseModel } from '../todos/_model/response/todo-response.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable()
 export class ResponseInterceptor implements HttpInterceptor {
   private readonly _router = inject(Router);
   private readonly _snackBar = inject(MatSnackBar);
+  private readonly _destroyRef = inject(DestroyRef);
 
   intercept(
     req: HttpRequest<unknown>,
@@ -40,6 +42,7 @@ export class ResponseInterceptor implements HttpInterceptor {
                 this._snackBar
                   .open('Task created on google calendar', 'View')
                   .onAction()
+                  .pipe(takeUntilDestroyed(this._destroyRef))
                   .subscribe(() =>
                     window.open(event!.body!.htmlLink, '_blank')
                   );
@@ -52,18 +55,14 @@ export class ResponseInterceptor implements HttpInterceptor {
         }
       }),
       catchError((error: HttpErrorResponse) => {
+        const errorMessage = error?.error?.messages?.error;
         switch (error.status) {
+          default:
+            this._snackBar.open(errorMessage, error?.statusText);
+            break;
           case 401:
-            this._snackBar.open(error?.error?.message, 'Unauthorized');
+            this._snackBar.open(errorMessage, error?.statusText);
             this._router.navigate(['/auth', 'login']);
-            break;
-          case 500:
-            console.log('Internal Server Error occurred.');
-            this._snackBar.open(error?.error?.message, 'Server Error');
-            break;
-          case 403:
-            console.log('Access Forbidden!');
-            this._snackBar.open(error?.error?.message, 'Access Forbidden');
             break;
         }
 

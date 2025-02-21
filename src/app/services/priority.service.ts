@@ -12,7 +12,7 @@ export class PriorityService {
 
   priorities$(): Observable<PriorityModel[]> {
     return this._http
-      .get<PriorityModel[]>(`${environment.apiUrl}priorities.php`)
+      .get<PriorityModel[]>(`${environment.apiUrl}priorities`)
       .pipe(
         map((response) => response),
         catchError((err) => {

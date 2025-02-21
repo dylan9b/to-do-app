@@ -24,6 +24,7 @@ export const Animations = {
       style({
         opacity: '0.1',
         transform: 'scale(1.1)',
+        color: 'black',
       })
     ),
     transition('pinned <=> unPinned', [
