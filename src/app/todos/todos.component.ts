@@ -140,12 +140,20 @@ export class TodosComponent implements OnInit {
           ...this.filters,
           isCompleted: !this.filters?.isCompleted,
         };
+
         break;
     }
   }
 
   filter(type: 'pin' | 'complete' | null): void {
     this.toggleFilter(type);
-    this._store.dispatch(todosActions.load({ request: this.filters }));
+
+    // remove falsy values from filters as these should not be sent to the server
+    const updatedFilters = this.filters
+      ? Object.fromEntries(
+          Object.entries(this.filters).filter(([, value]) => Boolean(value))
+        )
+      : {};
+    this._store.dispatch(todosActions.load({ request: updatedFilters }));
   }
 }

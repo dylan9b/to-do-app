@@ -27,7 +27,7 @@ export class AuthService {
 
   loginInWithGoogle$(tokenId: string): Observable<LoginResponseModel> {
     return this._http
-      .post<LoginResponseModel>(`${environment.apiUrl}login-google.php`, {
+      .post<LoginResponseModel>(`${environment.apiUrl}loginGoogle`, {
         tokenId,
       })
       .pipe(
