@@ -153,7 +153,7 @@ export class TodosComponent implements OnInit {
       ? Object.fromEntries(
           Object.entries(this.filters).filter(([, value]) => Boolean(value))
         )
-      : {};
+      : null;
     this._store.dispatch(todosActions.load({ request: updatedFilters }));
   }
 }

@@ -67,7 +67,7 @@ export class TodoModalComponent {
     if (this.data?.todo?.id) {
       form.dueDate.setValue(this.data?.todo?.dueDate);
       form.id.setValue(this.data?.todo?.id);
-      form.priorityId.setValue(this.data?.todo.priorityId);
+      form.priorityId.setValue(this.data?.todo?.priorityId);
       form.title.setValue(this.data?.todo?.title);
       form.isCompleted.setValue(this.data?.todo?.isCompleted);
     }

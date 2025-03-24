@@ -45,7 +45,7 @@
         <mat-select formControlName="priorityId">
           @for (priorityItem of prioritiesSignal(); track priorityItem?.id) {
           <mat-option [value]="priorityItem?.id">{{
-            priorityItem.priority
+            priorityItem?.priority
           }}</mat-option>
           }
         </mat-select>

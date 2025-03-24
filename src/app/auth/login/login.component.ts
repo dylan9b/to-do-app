@@ -111,7 +111,7 @@ export class LoginComponent extends AuthComponent implements OnInit {
     });
   }
 
-  private clearAllTokens(): void {
+  clearAllTokens(): void {
     this._cookieService.delete(this._tokenKey);
     sessionStorage.removeItem(this._tokenKey);
   }
@@ -119,14 +119,14 @@ export class LoginComponent extends AuthComponent implements OnInit {
   // this is only triggered when use click on google button to login
   private initiateGoogleSignIn(): void {
     this._socialAuthService.authState
-      .pipe(
+      ?.pipe(
         switchMap((googleUser) => {
           if (googleUser) {
             return from(
               this._socialAuthService.getAccessToken(
                 GoogleLoginProvider.PROVIDER_ID
               )
-            ).pipe(
+            )?.pipe(
               map((authToken) => {
                 return {
                   ...googleUser,
@@ -188,7 +188,7 @@ export class LoginComponent extends AuthComponent implements OnInit {
 
       this._authService
         .login$(request)
-        .pipe(takeUntilDestroyed(this._destroyRef))
+        ?.pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((response) => {
           this.clearAllTokens();
 
