@@ -68,11 +68,6 @@
               class="!h-4 !w-4 opacity-20 cursor-pointer text-[1rem]"
               >task_alt</mat-icon
             >
-            <!-- <mat-icon
-              (click)="openSearchModal()"
-              class="!h-4 !w-4 opacity-20 cursor-pointer text-[1rem]"
-              >search</mat-icon
-            > -->
             <mat-icon
               (click)="filter(null)"
               class="!h-4 !w-4 cursor-pointer text-[1rem] ml-8 text-red-600"
@@ -91,7 +86,6 @@
         </div>
         <div cdkDropList class="w-full" (cdkDropListDropped)="drop($event)">
           @for(todo of todosSignal(); track todo?.id) {
-          {{ todo?.id }}
           <div class="example-box" cdkDragLockAxis="y" cdkDrag>
             <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
             <app-todo-item
