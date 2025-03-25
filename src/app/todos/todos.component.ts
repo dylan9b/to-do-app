@@ -96,6 +96,12 @@ export class TodosComponent implements OnInit {
     });
   }
 
+  openSortModal(): void {
+    import('./todo-sort-modal/todo-sort-modal.component').then((c) => {
+      this._dialog.open(c.TodoSortModalComponent);
+    });
+  }
+
   openSearchModal(): void {
     import('./todo-search-modal/todo-search-modal.component').then((c) => {
       this._dialog.open(c.TodoSearchModalComponent);

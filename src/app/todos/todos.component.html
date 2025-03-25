@@ -12,6 +12,21 @@
         <button
           type="button"
           class="flex items-center justify-center rounded-full bg-[var(--blue-dark)] border-1 text-white text-2xl p-4 hover:bg-white hover:text-[var(--blue-dark)] duration-500 hover:rotate-180 hover:text-4xl ease-out"
+          (click)="openSortModal()"
+        >
+          <mat-icon>sort</mat-icon>
+        </button>
+
+        <button
+          type="button"
+          class="flex items-center justify-center rounded-full bg-[var(--blue-dark)] border-1 text-white text-2xl p-4 hover:bg-white hover:text-[var(--blue-dark)] duration-500 hover:rotate-180 hover:text-4xl ease-out"
+          (click)="openSearchModal()"
+        >
+          <mat-icon>search</mat-icon>
+        </button>
+        <button
+          type="button"
+          class="flex items-center justify-center rounded-full bg-[var(--blue-dark)] border-1 text-white text-2xl p-4 hover:bg-white hover:text-[var(--blue-dark)] duration-500 hover:rotate-180 hover:text-4xl ease-out"
           (click)="openCreateTodoModal()"
         >
           <mat-icon>add</mat-icon>
@@ -53,11 +68,11 @@
               class="!h-4 !w-4 opacity-20 cursor-pointer text-[1rem]"
               >task_alt</mat-icon
             >
-            <mat-icon
+            <!-- <mat-icon
               (click)="openSearchModal()"
               class="!h-4 !w-4 opacity-20 cursor-pointer text-[1rem]"
               >search</mat-icon
-            >
+            > -->
             <mat-icon
               (click)="filter(null)"
               class="!h-4 !w-4 cursor-pointer text-[1rem] ml-8 text-red-600"
@@ -76,6 +91,7 @@
         </div>
         <div cdkDropList class="w-full" (cdkDropListDropped)="drop($event)">
           @for(todo of todosSignal(); track todo?.id) {
+          {{ todo?.id }}
           <div class="example-box" cdkDragLockAxis="y" cdkDrag>
             <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
             <app-todo-item

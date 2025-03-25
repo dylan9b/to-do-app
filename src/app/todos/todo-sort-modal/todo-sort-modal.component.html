@@ -1,0 +1,43 @@
+<mat-dialog-content>
+  <h2
+    mat-dialog-title
+    class="!flex items-center justify-start !px-0 !font-semibold"
+  >
+    <span> Sort </span>
+    <button
+      mat-icon-button
+      mat-dialog-close
+      type="button"
+      class="!absolute right-0 !px-0"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </h2>
+  @if(form) {
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- COLUMN -->
+    <mat-form-field class="w-full">
+      <mat-label>Column</mat-label>
+      <mat-select formControlName="column">
+        @for (column of columns; track column.key) {
+        <mat-option [value]="column.key">{{ column.value }} </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <!-- SORT DIRECTION -->
+    <mat-form-field class="w-full">
+      <mat-label>Direction</mat-label>
+      <mat-select formControlName="direction">
+        @for (direction of directions; track direction) {
+        <mat-option [value]="direction">{{ direction }} </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="w-100">
+      <button type="submit">Sort</button>
+    </div>
+  </form>
+  }
+</mat-dialog-content>

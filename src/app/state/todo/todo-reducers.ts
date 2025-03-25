@@ -20,11 +20,15 @@ export const todoReducer = createReducer(
     status: STATUS.LOADING,
   })),
   on(todosActions.loadSuccess, (state, { response }) => {
-    return {
+    const resp = {
       ...state,
       ...todosAdapter.setAll(response, state),
       status: STATUS.SUCCESS,
     };
+
+    console.log('resp', resp);
+
+    return resp;
   }),
   on(todosActions.loadFailure, (state, { error }) => ({
     ...state,
@@ -71,8 +75,6 @@ export const todoReducer = createReducer(
   })),
   on(todosActions.createSuccess, (state, { response }) => {
     const test = todosAdapter.addOne(response, state);
-    console.log('new todo', response);
-    console.log('test', test);
     return {
       ...state,
       ...test,

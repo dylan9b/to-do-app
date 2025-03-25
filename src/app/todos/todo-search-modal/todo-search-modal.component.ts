@@ -20,7 +20,7 @@ export class TodoSearchModalComponent {
   private readonly _store = inject(Store<AppState>);
   private readonly _dialogRef = inject(MatDialogRef<TodoSearchModalComponent>);
 
-  searchTermSignal = this._store.selectSignal(selectSearchTerm);
+  readonly searchTermSignal = this._store.selectSignal(selectSearchTerm);
 
   filterBySearchTerm(searchTerm: Event): void {
     const value = (searchTerm.target as HTMLInputElement).value;

@@ -18,3 +18,13 @@ export const selectSearchTerm = createSelector(
   selectTodoState,
   (state) => state.request?.searchTerm ?? null
 );
+
+export const selectColumnSort = createSelector(
+  selectTodoState,
+  (state) => state.request?.orderColumn ?? null
+);
+
+export const selectColumnSortDirection = createSelector(
+  selectTodoState,
+  (state) => state.request?.orderDirection ?? null
+);
