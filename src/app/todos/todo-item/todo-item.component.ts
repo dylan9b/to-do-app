@@ -4,13 +4,13 @@ import {
   DestroyRef,
   inject,
   input,
+  Output,
 } from '@angular/core';
 import { TodoModel } from '../_model/todo.model';
 import { AppState } from '../../state/app.state';
 import { Store } from '@ngrx/store';
 import { MatIconModule } from '@angular/material/icon';
 import { UpdateTodoRequestModel } from '../_model/request/update-todo-request.model';
-import { todosActions } from '../../state/todo/todo-actions';
 import { DatePipe } from '@angular/common';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
@@ -20,6 +20,10 @@ import { SessionStorageEnum } from '@shared/sessionStorage.enum';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isGoogleLoginSelector } from '@state/user/user-selector';
 import { Animations } from '../../animations/animations';
+import { TodoService } from '@services/todo.service';
+import { UpdateTodoResponseModel } from '../_model/response/update-todo-response.model';
+import { Observable } from 'rxjs';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-todo-item',
@@ -36,11 +40,29 @@ export class TodoItemComponent {
   private readonly _cookieService = inject(CookieService);
   private readonly _httpClient = inject(HttpClient);
   private readonly _destroyRef = inject(DestroyRef);
+  private readonly _todoService = inject(TodoService);
 
   readonly todoSignal = input.required<TodoModel>();
   readonly isGoogleLoginSignal = this._store.selectSignal(
     isGoogleLoginSelector
   );
+
+  @Output() updatedTodoEvent = new EventEmitter<TodoModel>();
+  @Output() removeTodoEvent = new EventEmitter<string>();
+
+  private updateTodo$(
+    request: Partial<UpdateTodoRequestModel>
+  ): Observable<UpdateTodoResponseModel> {
+    return this._todoService
+      .updateTodo$(request)
+      .pipe(takeUntilDestroyed(this._destroyRef));
+  }
+
+  private deleteTodo$(id: string): Observable<{ id: string }> {
+    return this._todoService
+      .deleteTodo$(id)
+      .pipe(takeUntilDestroyed(this._destroyRef));
+  }
 
   completeTodo(): void {
     const request: Partial<UpdateTodoRequestModel> = {
@@ -48,11 +70,19 @@ export class TodoItemComponent {
       isCompleted: !this.todoSignal().isCompleted,
     };
 
-    this._store.dispatch(todosActions.update({ request }));
+    this.updateTodo$(request)
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((response) => {
+        this.updatedTodoEvent.emit(response?.todo);
+      });
   }
 
   removeTodo(): void {
-    this._store.dispatch(todosActions.delete({ id: this.todoSignal().id }));
+    this.deleteTodo$(this.todoSignal().id)
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((response) => {
+        this.removeTodoEvent.emit(response.id);
+      });
   }
 
   pinTodo(): void {
@@ -61,16 +91,29 @@ export class TodoItemComponent {
       isPinned: !this.todoSignal().isPinned,
     };
 
-    this._store.dispatch(todosActions.update({ request }));
+    this.updateTodo$(request)
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((response) => {
+        this.updatedTodoEvent.emit(response?.todo);
+      });
   }
 
   editTodo(): void {
     import('../todo-modal/todo-modal.component').then((c) => {
-      this._dialog.open(c.TodoModalComponent, {
+      const dialog = this._dialog.open(c.TodoModalComponent, {
         data: {
           todo: this.todoSignal() ?? null,
         },
       });
+
+      dialog
+        .afterClosed()
+        .pipe(takeUntilDestroyed(this._destroyRef))
+        .subscribe((result: TodoModel) => {
+          if (result) {
+            this.updatedTodoEvent.emit(result);
+          }
+        });
     });
   }
 

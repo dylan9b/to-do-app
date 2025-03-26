@@ -3,14 +3,30 @@
     mat-dialog-title
     class="!flex items-center justify-start !px-0 !font-semibold"
   >
+    <span>Search</span>
+    <button
+      mat-icon-button
+      mat-dialog-close
+      type="button"
+      class="!absolute right-0 !px-0"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </h2>
+
+  @if(form) {
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <mat-form-field class="w-full">
       <mat-label>Search ...</mat-label>
-      <input
-        matInput
-        type="text"
-        [value]="searchTermSignal()"
-        (keydown.enter)="filterBySearchTerm($event)"
-      />
+      <input formControlName="searchTerm" matInput type="text" />
     </mat-form-field>
-  </h2>
+
+    <button
+      type="submit"
+      class="w-full transition-all duration-500 ease-in-out p-4 rounded-[2rem] font-medium text-white bg-[var(--blue-dark)] hover:bg-white hover:text-[var(--blue-dark)] border-white border hover:border-[var(--blue-dark)] cursor-pointer"
+    >
+      Apply
+    </button>
+  </form>
+  }
 </mat-dialog-content>

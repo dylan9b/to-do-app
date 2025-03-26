@@ -9,7 +9,7 @@ import { TodoRequestModel } from '../todos/_model/request/todo-request.model';
 import { TodoModel } from '../todos/_model/todo.model';
 import { UpdateTodoRequestModel } from '../todos/_model/request/update-todo-request.model';
 import { UpdateTodoResponseModel } from '../todos/_model/response/update-todo-response.model';
-import { DeleteTodoResponseModel } from '../todos/_model/response/delete-todo-respnse.model';
+import { DeleteTodoResponseModel } from '../todos/_model/response/delete-todo-response.model';
 import { CreateTodoRequestModel } from '../todos/_model/request/create-todo-request.model';
 import { CreateTodoResponseModel } from '../todos/_model/response/create-todo-response.model';
 import { provideHttpClient } from '@angular/common/http';

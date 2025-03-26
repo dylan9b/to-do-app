@@ -1,15 +1,16 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  inject,
+  ChangeDetectionStrategy,
+  DestroyRef,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { AppState } from '../../state/app.state';
-import { Store } from '@ngrx/store';
 import { CreateTodoRequestModel } from '../_model/request/create-todo-request.model';
-import { selectAllPriorities } from '../../state/priority/priority.selectors';
-import { todosActions } from '../../state/todo/todo-actions';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
@@ -19,12 +20,19 @@ import {
   MAT_DIALOG_DATA,
   MatDialog,
   MatDialogModule,
+  MatDialogRef,
 } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { TodoModel } from '../_model/todo.model';
 import { UpdateTodoRequestModel } from '../_model/request/update-todo-request.model';
 import { TodoModalFormControl } from './_model/todo-modal-form-control.model';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { UpdateTodoResponseModel } from '../_model/response/update-todo-response.model';
+import { Observable } from 'rxjs';
+import { TodoService } from '@services/todo.service';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { CreateTodoResponseModel } from '../_model/response/create-todo-response.model';
+import { PriorityService } from '@services/priority.service';
 
 @Component({
   selector: 'app-todo-create-modal',
@@ -47,11 +55,14 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 })
 export class TodoModalComponent {
   private readonly _formBuilder = inject(FormBuilder);
-  private readonly _store = inject(Store<AppState>);
   private readonly _datePipe = inject(DatePipe);
   private readonly _dialog = inject(MatDialog);
+  private readonly _todoService = inject(TodoService);
+  private readonly _proritiesService = inject(PriorityService);
+  private readonly _destroyRef = inject(DestroyRef);
+  private readonly _dialogRef = inject(MatDialogRef<TodoModalComponent>);
 
-  readonly prioritiesSignal = this._store.selectSignal(selectAllPriorities);
+  readonly prioritiesSignal = toSignal(this._proritiesService.priorities$());
 
   readonly data?: { todo?: TodoModel | null } = inject(MAT_DIALOG_DATA);
 
@@ -96,7 +107,11 @@ export class TodoModalComponent {
     };
 
     if (this.form.valid) {
-      this._store.dispatch(todosActions.create({ request }));
+      this.createTodo$(request)
+        .pipe(takeUntilDestroyed(this._destroyRef))
+        .subscribe((response) => {
+          this._dialogRef.close(response?.todo);
+        });
     }
   }
 
@@ -113,7 +128,27 @@ export class TodoModalComponent {
     };
 
     if (this.form.valid) {
-      this._store.dispatch(todosActions.update({ request }));
+      this.updateTodo$(request)
+        .pipe(takeUntilDestroyed(this._destroyRef))
+        .subscribe((response) => {
+          this._dialogRef.close(response?.todo);
+        });
     }
+  }
+
+  private updateTodo$(
+    request: Partial<UpdateTodoRequestModel>
+  ): Observable<UpdateTodoResponseModel> {
+    return this._todoService
+      .updateTodo$(request)
+      .pipe(takeUntilDestroyed(this._destroyRef));
+  }
+
+  private createTodo$(
+    request: CreateTodoRequestModel
+  ): Observable<CreateTodoResponseModel> {
+    return this._todoService
+      .createTodo$(request)
+      .pipe(takeUntilDestroyed(this._destroyRef));
   }
 }

@@ -4,7 +4,7 @@ import { TodoRequestModel } from '../todos/_model/request/todo-request.model';
 import { catchError, map, Observable } from 'rxjs';
 import { environment } from '../environment/environment';
 import { TodoModel } from '../todos/_model/todo.model';
-import { DeleteTodoResponseModel } from '../todos/_model/response/delete-todo-respnse.model';
+import { DeleteTodoResponseModel } from '../todos/_model/response/delete-todo-response.model';
 import { UpdateTodoRequestModel } from '../todos/_model/request/update-todo-request.model';
 import { UpdateTodoResponseModel } from '../todos/_model/response/update-todo-response.model';
 import { CreateTodoRequestModel } from '../todos/_model/request/create-todo-request.model';
@@ -16,11 +16,16 @@ import { CreateTodoResponseModel } from '../todos/_model/response/create-todo-re
 export class TodoService {
   private readonly _http = inject(HttpClient);
 
-  todos$(request?: Partial<TodoRequestModel> | null): Observable<TodoModel[]> {
+  todos$(
+    request?: Partial<TodoRequestModel> | null
+  ): Observable<{ results: TodoModel[]; total: number }> {
     return this._http
-      .post<TodoModel[]>(`${environment.apiUrl}todos/get`, {
-        ...request,
-      })
+      .post<{ results: TodoModel[]; total: number }>(
+        `${environment.apiUrl}todos/get`,
+        {
+          ...request,
+        }
+      )
       .pipe(
         map((response) => response),
         catchError((err) => {

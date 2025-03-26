@@ -14,17 +14,7 @@ export const selectAllCompletedTotal = createSelector(
   (todos) => todos?.filter((todo) => todo?.isCompleted).length
 );
 
-export const selectSearchTerm = createSelector(
+export const selectFilters = createSelector(
   selectTodoState,
-  (state) => state.request?.searchTerm ?? null
-);
-
-export const selectColumnSort = createSelector(
-  selectTodoState,
-  (state) => state.request?.orderColumn ?? null
-);
-
-export const selectColumnSortDirection = createSelector(
-  selectTodoState,
-  (state) => state.request?.orderDirection ?? null
+  (state) => state.request ?? null
 );

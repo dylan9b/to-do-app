@@ -11,17 +11,17 @@ export class TodoEffects {
   private readonly _actions$ = inject(Actions);
   private readonly _todoService = inject(TodoService);
 
-  loadTodos$ = createEffect(() =>
-    this._actions$.pipe(
-      ofType(todosActions.load),
-      switchMap((action) =>
-        from(this._todoService.todos$(action?.request)).pipe(
-          map((response) => todosActions.loadSuccess({ response })),
-          catchError((error) => of(todosActions.loadFailure({ error })))
-        )
-      )
-    )
-  );
+  // loadTodos$ = createEffect(() =>
+  //   this._actions$.pipe(
+  //     ofType(todosActions.load),
+  //     switchMap((action) =>
+  //       from(this._todoService.todos$(action?.request)).pipe(
+  //         map((response) => todosActions.loadSuccess({ response })),
+  //         catchError((error) => of(todosActions.loadFailure({ error })))
+  //       )
+  //     )
+  //   )
+  // );
 
   updateTodo$ = createEffect(() =>
     this._actions$.pipe(
@@ -42,17 +42,17 @@ export class TodoEffects {
     )
   );
 
-  deleteTodo$ = createEffect(() =>
-    this._actions$.pipe(
-      ofType(todosActions.delete),
-      switchMap((action) =>
-        from(this._todoService.deleteTodo$(action?.id)).pipe(
-          map((response) => todosActions.deleteSuccess({ id: response.id })),
-          catchError((error) => of(todosActions.deleteFailure({ error })))
-        )
-      )
-    )
-  );
+  // deleteTodo$ = createEffect(() =>
+  //   this._actions$.pipe(
+  //     ofType(todosActions.delete),
+  //     switchMap((action) =>
+  //       from(this._todoService.deleteTodo$(action?.id)).pipe(
+  //         map((response) => todosActions.deleteSuccess({ id: response.id })),
+  //         catchError((error) => of(todosActions.deleteFailure({ error })))
+  //       )
+  //     )
+  //   )
+  // );
 
   createTodo$ = createEffect(() =>
     this._actions$.pipe(

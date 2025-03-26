@@ -23,5 +23,8 @@ export const todosActions = createActionGroup({
     Create: props<{ request: CreateTodoRequestModel }>(),
     'Create Success': props<{ response: TodoModel }>(),
     'Create Failure': props<{ error: string }>(),
+
+    // Keep track of the filters applied so that on opening the modal, the filters are pre-populated
+    UpdateFilters: props<{ request: Partial<TodoRequestModel> | null }>(),
   },
 });

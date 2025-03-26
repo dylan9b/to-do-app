@@ -14,27 +14,24 @@ export const todoReducer = createReducer(
   initialState,
 
   //GET TODOS
-  on(todosActions.load, (state, { request }) => ({
-    ...state,
-    request,
-    status: STATUS.LOADING,
-  })),
-  on(todosActions.loadSuccess, (state, { response }) => {
-    const resp = {
-      ...state,
-      ...todosAdapter.setAll(response, state),
-      status: STATUS.SUCCESS,
-    };
-
-    console.log('resp', resp);
-
-    return resp;
-  }),
-  on(todosActions.loadFailure, (state, { error }) => ({
-    ...state,
-    status: STATUS.ERROR,
-    error,
-  })),
+  // on(todosActions.load, (state, { request }) => ({
+  //   ...state,
+  //   request,
+  //   status: STATUS.LOADING,
+  // })),
+  // on(todosActions.loadSuccess, (state, { response }) => {
+  //   const resp = {
+  //     ...state,
+  //     ...todosAdapter.setAll(response, state),
+  //     status: STATUS.SUCCESS,
+  //   };
+  //   return resp;
+  // }),
+  // on(todosActions.loadFailure, (state, { error }) => ({
+  //   ...state,
+  //   status: STATUS.ERROR,
+  //   error,
+  // })),
 
   // UPDATE TODO
   on(todosActions.update, (state) => ({
@@ -85,5 +82,11 @@ export const todoReducer = createReducer(
     ...state,
     status: STATUS.ERROR,
     error,
+  })),
+
+  // UPDATE FILTERS
+  on(todosActions.updateFilters, (state, { request }) => ({
+    ...state,
+    request,
   }))
 );

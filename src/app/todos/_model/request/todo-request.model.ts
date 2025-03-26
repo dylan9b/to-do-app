@@ -6,4 +6,6 @@ export interface TodoRequestModel {
   isPinned: boolean | null;
   orderColumn: string | null;
   orderDirection: 'ASC' | 'DESC' | null;
+  limit: number | null;
+  offset: number | null;
 }
