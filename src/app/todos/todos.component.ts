@@ -111,17 +111,14 @@ export class TodosComponent implements OnInit {
 
   openCreateTodoModal(): void {
     import('./todo-modal/todo-modal.component').then((c) => {
-      const dialog = this._dialog.open(c.TodoModalComponent, {
-        minWidth: '400px',
-        maxWidth: '400px',
-      });
+      const dialog = this._dialog.open(c.TodoModalComponent);
 
       dialog
         .afterClosed()
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((todo: TodoModel) => {
           if (todo) {
-            this.todosSignal.set([todo, ...this.todosSignal()]);
+            this.todosSignal.set([todo, ...this.todosSignal()].slice(0, 5));
             this.totalTodosSignal.set(this.totalTodosSignal() + 1);
           }
         });
@@ -131,8 +128,6 @@ export class TodosComponent implements OnInit {
   openSortModal(): void {
     import('./todo-sort-modal/todo-sort-modal.component').then((c) => {
       const dialog = this._dialog.open(c.TodoSortModalComponent, {
-        minWidth: '400px',
-        maxWidth: '400px',
         data: {
           totalVisibleTodos: this.todosSignal().length,
         },
@@ -150,10 +145,7 @@ export class TodosComponent implements OnInit {
 
   openSearchModal(): void {
     import('./todo-search-modal/todo-search-modal.component').then((c) => {
-      const dialog = this._dialog.open(c.TodoSearchModalComponent, {
-        minWidth: '400px',
-        maxWidth: '400px',
-      });
+      const dialog = this._dialog.open(c.TodoSearchModalComponent);
       dialog
         .afterClosed()
         .pipe(takeUntilDestroyed(this._destroyRef))
