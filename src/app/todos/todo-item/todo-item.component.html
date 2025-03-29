@@ -21,14 +21,14 @@
   >
 
   <small
-    class="visual flex-[0.2]"
+    class="visual flex-[0.3] md:flex-[0.2]"
     [class.complete]="todoSignal().isCompleted"
-    >{{ todoSignal().dueDate | date : "longDate" }}</small
+    >{{ todoSignal().dueDate | date : "mediumDate" }}</small
   >
 
   <button
     mat-icon-button
-    class="flex-[0.2] text-right"
+    class="md:flex-[0.2] text-right"
     [matMenuTriggerFor]="menu"
   >
     <mat-icon>more_vert</mat-icon>
