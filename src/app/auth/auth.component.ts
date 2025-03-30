@@ -40,7 +40,7 @@ export class AuthComponent {
   hidePasswordSignal = signal(true);
   isFormSubmittedSignal = signal(false);
 
-  togglePassword(event: MouseEvent) {
+  togglePassword(event: MouseEvent): void {
     event.stopPropagation();
     this.hidePasswordSignal.set(!this.hidePasswordSignal());
   }

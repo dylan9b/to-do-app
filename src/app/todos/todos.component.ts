@@ -89,13 +89,12 @@ export class TodosComponent implements OnInit {
   ): Observable<{ results: TodoModel[]; total: number }> {
     return this._todoService
       .todos$(request)
-      .pipe(takeUntilDestroyed(this._destroyRef));
+      ?.pipe(takeUntilDestroyed(this._destroyRef));
   }
 
   ngOnInit(): void {
-    this.loadItems$({ limit: 5, offset: this.offset })
-      .pipe(takeUntilDestroyed(this._destroyRef))
-      .subscribe((response) => {
+    this.loadItems$({ limit: 5, offset: this.offset })?.subscribe(
+      (response) => {
         if (response?.total && response?.results) {
           this.totalTodosSignal.set(response.total);
           this.todosSignal.set(response.results);
@@ -103,7 +102,8 @@ export class TodosComponent implements OnInit {
 
           this.isLoaded = true;
         }
-      });
+      }
+    );
     if (this._cookieService.get(SessionStorageEnum.GOOGLE_ACCESS_TOKEN)) {
       this._store.dispatch(userActions.isGoogleLogin({ isGoogleLogin: true }));
     }
@@ -209,12 +209,12 @@ export class TodosComponent implements OnInit {
     };
 
     if (type === null || !Object.entries(updatedFilters).length) {
-      this.loadItems$({ limit: 5, offset: 0 }).subscribe((response) => {
+      this.loadItems$({ limit: 5, offset: 0 })?.subscribe((response) => {
         this.todosSignal.set(response.results);
       });
       this.offset = 5;
     } else {
-      this.loadItems$(updatedFilters).subscribe((response) => {
+      this.loadItems$(updatedFilters)?.subscribe((response) => {
         this.todosSignal.set(response.results);
       });
     }
@@ -249,7 +249,7 @@ export class TodosComponent implements OnInit {
       offset: this.offset,
     };
 
-    this.loadItems$(updatedFilters).subscribe((response) => {
+    this.loadItems$(updatedFilters)?.subscribe((response) => {
       const updatedTodos = [...this.todosSignal(), ...response.results];
       this.todosSignal.set(updatedTodos);
       this.offset += 5;

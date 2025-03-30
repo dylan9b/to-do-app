@@ -13,6 +13,7 @@ import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import { provideMockStore } from '@ngrx/store/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { selectAllPriorities } from '@state/priority/priority.selectors';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('TodoModalComponent', () => {
   let component: TodoModalComponent;
@@ -42,6 +43,7 @@ describe('TodoModalComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, MatDialogModule, MatSlideToggleModule],
       providers: [
+        provideHttpClient(),
         provideNoopAnimations(),
         provideMomentDateAdapter(),
         provideMockStore({
@@ -61,7 +63,6 @@ describe('TodoModalComponent', () => {
       ],
     }).compileComponents();
 
-    // mockStore = TestBed.inject(MockStore);
     fixture = TestBed.createComponent(TodoModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

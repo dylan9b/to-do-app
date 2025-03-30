@@ -1,18 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 import {
+  HttpClientTestingModule,
   HttpTestingController,
-  provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { TodoService } from './todo.service';
 import { environment } from '../environment/environment';
 import { TodoRequestModel } from '../todos/_model/request/todo-request.model';
-import { TodoModel } from '../todos/_model/todo.model';
 import { UpdateTodoRequestModel } from '../todos/_model/request/update-todo-request.model';
-import { UpdateTodoResponseModel } from '../todos/_model/response/update-todo-response.model';
-import { DeleteTodoResponseModel } from '../todos/_model/response/delete-todo-response.model';
 import { CreateTodoRequestModel } from '../todos/_model/request/create-todo-request.model';
 import { CreateTodoResponseModel } from '../todos/_model/response/create-todo-response.model';
-import { provideHttpClient } from '@angular/common/http';
+import { UpdateTodoResponseModel } from '../todos/_model/response/update-todo-response.model';
 
 describe('TodoService', () => {
   let service: TodoService;
@@ -20,7 +17,8 @@ describe('TodoService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      imports: [HttpClientTestingModule],
+      providers: [TodoService],
     });
     service = TestBed.inject(TodoService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -30,88 +28,45 @@ describe('TodoService', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+  it('should fetch todos$', () => {
+    const requestPayload: Partial<TodoRequestModel> = { searchTerm: 'Test' };
 
-  it('should fetch todos', () => {
-    const mockTodos: TodoModel[] = [
-      {
-        id: '1',
-        title: 'Test Todo',
-        isCompleted: false,
-        isPinned: false,
-        order: 0,
-        dueDate: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        priorityId: '',
-        userId: '',
-      },
-    ];
-    const request: Partial<TodoRequestModel> = { userId: '123' };
+    const mockResponse = {
+      results: [
+        {
+          id: '1',
+          title: 'tEst',
+          isCompleted: false,
+          isPinned: false,
+          order: 0,
+          dueDate: new Date(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          priorityId: '1',
+          userId: '1',
+        },
+      ],
+      total: 1,
+    };
 
-    service.todos$(request).subscribe((todos) => {
-      expect(todos).toEqual(mockTodos);
+    service.todos$(requestPayload).subscribe((response) => {
+      expect(response).toEqual(mockResponse);
     });
 
     const req = httpMock.expectOne(`${environment.apiUrl}todos/get`);
     expect(req.request.method).toBe('POST');
-    req.flush(mockTodos);
+    expect(req.request.body).toEqual(requestPayload);
+    req.flush(mockResponse);
   });
 
-  it('should update a todo', () => {
+  it('should update a todo$', () => {
+    const requestPayload: Partial<UpdateTodoRequestModel> = {
+      id: '1',
+      title: 'Updated',
+    };
+
     const mockResponse: UpdateTodoResponseModel = {
-      success: true,
-      todo: {
-        id: '1',
-        title: 'Updated Todo',
-        isCompleted: false,
-        isPinned: false,
-        order: 0,
-        dueDate: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        priorityId: '',
-        userId: '',
-      },
-      message: '',
-      id: '',
-    };
-    const request: Partial<UpdateTodoRequestModel> = {
-      id: '1',
-      title: 'Updated Todo',
-    };
-
-    service.updateTodo$(request).subscribe((response) => {
-      expect(response).toEqual(mockResponse);
-    });
-
-    const req = httpMock.expectOne(`${environment.apiUrl}todos/update`);
-    expect(req.request.method).toBe('PUT');
-    req.flush(mockResponse);
-  });
-
-  it('should delete a todo', () => {
-    const mockResponse: DeleteTodoResponseModel = {
-      success: true,
-      message: '',
-      id: '',
-    };
-    const id = '1';
-
-    service.deleteTodo$(id).subscribe((response) => {
-      expect(response).toEqual(mockResponse);
-    });
-
-    const req = httpMock.expectOne(`${environment.apiUrl}todos/delete`);
-    expect(req.request.method).toBe('DELETE');
-    req.flush(mockResponse);
-  });
-
-  it('should create a todo', () => {
-    const mockResponse: CreateTodoResponseModel = {
-      id: '1',
+      message: 'Todo updated successfully!',
       success: true,
       todo: {
         id: '1',
@@ -122,21 +77,80 @@ describe('TodoService', () => {
         dueDate: new Date(),
         createdAt: new Date(),
         updatedAt: new Date(),
-        priorityId: '',
-        userId: '',
+        priorityId: '1',
+        userId: '1',
       },
-      message: '',
-    };
-    const request: CreateTodoRequestModel = {
-      title: 'New Todo',
+      id: '1',
     };
 
-    service.createTodo$(request).subscribe((response) => {
+    service.updateTodo$(requestPayload).subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}todos/update`);
+    expect(req.request.method).toBe('PUT');
+    expect(req.request.body).toEqual(requestPayload);
+    req.flush(mockResponse);
+  });
+
+  it('should delete a todo$', () => {
+    const todoId = '1';
+
+    const mockResponse: CreateTodoResponseModel = {
+      message: 'Todo deleted successfully!',
+      success: true,
+      todo: {
+        id: '1',
+        title: 'New Todo',
+        isCompleted: false,
+        isPinned: false,
+        order: 0,
+        dueDate: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        priorityId: '1',
+        userId: '1',
+      },
+      id: '1',
+    };
+
+    service.deleteTodo$(todoId).subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}todos/delete`);
+    expect(req.request.method).toBe('DELETE');
+    expect(req.request.body).toEqual({ id: todoId });
+    req.flush(mockResponse);
+  });
+
+  it('should create a todo$', () => {
+    const mockResponse: CreateTodoResponseModel = {
+      message: 'Todo successfully created!',
+      success: true,
+      todo: {
+        id: '1',
+        title: 'New Todo',
+        isCompleted: false,
+        isPinned: false,
+        order: 0,
+        dueDate: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        priorityId: '1',
+        userId: '1',
+      },
+      id: '1',
+    };
+    const requestPayload: CreateTodoRequestModel = { title: 'New Todo' };
+
+    service.createTodo$(requestPayload).subscribe((response) => {
       expect(response).toEqual(mockResponse);
     });
 
     const req = httpMock.expectOne(`${environment.apiUrl}todos/create`);
     expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(requestPayload);
     req.flush(mockResponse);
   });
 });

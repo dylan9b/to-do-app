@@ -109,7 +109,7 @@ export class TodoSortModalComponent {
       };
 
       this.loadItems$(request).subscribe((response) => {
-        this._store.dispatch(todosActions.updateFilters({ request }));
+        this._store.dispatch(todosActions?.updateFilters({ request }));
 
         this._dialogRef.close(response.results);
       });

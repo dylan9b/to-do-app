@@ -118,7 +118,7 @@ export class LoginComponent extends AuthComponent implements OnInit {
 
   // this is only triggered when use click on google button to login
   private initiateGoogleSignIn(): void {
-    this._socialAuthService.authState
+    this._socialAuthService?.authState
       ?.pipe(
         switchMap((googleUser) => {
           if (googleUser) {

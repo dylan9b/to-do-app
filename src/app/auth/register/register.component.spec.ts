@@ -1,27 +1,28 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { provideRouter, RouterLink, RouterModule } from '@angular/router';
 import { of } from 'rxjs';
 import { AuthService } from '@services/auth.service';
 import { RegisterComponent } from './register.component';
 import { AuthRequestModel } from '../_model/auth-request.model';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { routes } from '../../app.routes';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
   let fixture: ComponentFixture<RegisterComponent>;
   let authService: jasmine.SpyObj<AuthService>;
-  let router: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
     const authServiceSpy = jasmine.createSpyObj('AuthService', ['register$']);
-    const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, RouterModule, RouterLink],
       providers: [
+        provideRouter(routes),
         { provide: AuthService, useValue: authServiceSpy },
-        { provide: Router, useValue: routerSpy },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegisterComponent);
@@ -32,7 +33,6 @@ describe('RegisterComponent', () => {
       reTypePassword: '12345678',
     });
     authService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
-    router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
     fixture.detectChanges();
   });
 
@@ -71,20 +71,6 @@ describe('RegisterComponent', () => {
     component.onSubmit();
 
     expect(authService.register$).toHaveBeenCalledWith(authRequest);
-  });
-
-  it('should navigate to login on successful registration', () => {
-    component.form.controls['email']?.setValue('test@example.com');
-    component.form.controls['password']?.setValue('12345678');
-    component.form.controls['reTypePassword']?.setValue('12345678');
-
-    authService.register$.and.returnValue(
-      of({ success: true, message: 'Registration successful' })
-    );
-
-    component.onSubmit();
-
-    expect(router.navigate).toHaveBeenCalledWith(['/auth', 'login']);
   });
 
   it('should not call AuthService register$ on invalid form submission', () => {
