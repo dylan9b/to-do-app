@@ -121,7 +121,7 @@
         </div>
       </div>
     </div>
-    } @else {
+    } @else if (isLoaded && totalTodosSignal() === 0) {
     <!-- NO TODOS -->
     <div
       class="flex flex-col items-center justify-center gap-4 rounded-lg bg-white p-6 no-todos"

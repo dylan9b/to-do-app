@@ -111,7 +111,9 @@ export class TodosComponent implements OnInit {
 
   openCreateTodoModal(): void {
     import('./todo-modal/todo-modal.component').then((c) => {
-      const dialog = this._dialog.open(c.TodoModalComponent);
+      const dialog = this._dialog.open(c.TodoModalComponent, {
+        width: '90%',
+      });
 
       dialog
         .afterClosed()
@@ -128,6 +130,7 @@ export class TodosComponent implements OnInit {
   openSortModal(): void {
     import('./todo-sort-modal/todo-sort-modal.component').then((c) => {
       const dialog = this._dialog.open(c.TodoSortModalComponent, {
+        width: '90%',
         data: {
           totalVisibleTodos: this.todosSignal().length,
         },
@@ -135,9 +138,10 @@ export class TodosComponent implements OnInit {
       dialog
         .afterClosed()
         .pipe(takeUntilDestroyed(this._destroyRef))
-        .subscribe((result) => {
-          if (result) {
-            this.todosSignal.set(result);
+        .subscribe((response) => {
+          if (response) {
+            this.todosSignal.set(response.results);
+            this.totalTodosSignal.set(response.total);
           }
         });
     });
@@ -145,13 +149,16 @@ export class TodosComponent implements OnInit {
 
   openSearchModal(): void {
     import('./todo-search-modal/todo-search-modal.component').then((c) => {
-      const dialog = this._dialog.open(c.TodoSearchModalComponent);
+      const dialog = this._dialog.open(c.TodoSearchModalComponent, {
+        width: '90%',
+      });
       dialog
         .afterClosed()
         .pipe(takeUntilDestroyed(this._destroyRef))
-        .subscribe((result) => {
-          if (result) {
-            this.todosSignal.set(result);
+        .subscribe((response) => {
+          if (response) {
+            this.todosSignal.set(response.results);
+            this.totalTodosSignal.set(response.total);
           }
         });
     });
@@ -169,6 +176,10 @@ export class TodosComponent implements OnInit {
           isCompleted: null,
           isPinned: null,
         };
+
+        this._store.dispatch(
+          todosActions.updateFilters({ request: { limit: 5, offset: 0 } })
+        );
         break;
       case 'pin':
         this.filters = {
@@ -211,10 +222,16 @@ export class TodosComponent implements OnInit {
     if (type === null || !Object.entries(updatedFilters).length) {
       this.loadItems$({ limit: 5, offset: 0 })?.subscribe((response) => {
         this.todosSignal.set(response.results);
+        this.totalTodosSignal.set(response.total);
+
+        this._store.dispatch(
+          todosActions.updateFilters({ request: { limit: 5, offset: 0 } })
+        );
       });
       this.offset = 5;
     } else {
       this.loadItems$(updatedFilters)?.subscribe((response) => {
+        this.totalTodosSignal.set(response.total);
         this.todosSignal.set(response.results);
       });
     }
@@ -244,6 +261,7 @@ export class TodosComponent implements OnInit {
       : {};
 
     updatedFilters = {
+      ...this._selectFiltersSignal(),
       ...updatedFilters,
       limit: 5,
       offset: this.offset,
