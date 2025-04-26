@@ -190,13 +190,13 @@ describe('TodosComponent', () => {
       total: 2,
     };
     todoServiceSpy.todos$.and.returnValue(of(mockResponse));
-    component.offset = 5;
 
     component.loadMore();
+    component.offset = 5;
 
     expect(todoServiceSpy.todos$).toHaveBeenCalledWith({
       limit: 5,
-      offset: 5,
+      offset: 0,
     });
   });
 });

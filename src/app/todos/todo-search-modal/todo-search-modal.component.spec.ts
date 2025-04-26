@@ -9,6 +9,7 @@ import { Signal } from '@angular/core';
 import { provideMockStore } from '@ngrx/store/testing';
 import { selectFilters } from '@state/todo/todo-selectors';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { TodoModel } from '../_model/todo.model';
 
 describe('TodoSearchModalComponent', () => {
   let component: TodoSearchModalComponent;
@@ -63,31 +64,20 @@ describe('TodoSearchModalComponent', () => {
       searchTerm: 'new search',
     });
 
-    expect(mockDialogRef.close).toHaveBeenCalledWith([]);
+    expect(mockDialogRef.close).toHaveBeenCalledWith({ results: [], total: 0 });
   });
 
   it('should close the dialog with results on successful submission', () => {
-    const mockResults = [
-      {
-        id: '1',
-        title: 'Test Todo',
-        isCompleted: false,
-        isPinned: false,
-        order: 0,
-        dueDate: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        priorityId: '',
-        userId: '',
-      },
-    ];
-    mockTodoService.todos$.and.returnValue(
-      of({ results: mockResults, total: 1 })
-    );
+    const mockResponse = {
+      results: [{ id: 1, title: 'Test Todo' }] as unknown as TodoModel[],
+      total: 1,
+    };
+
+    mockTodoService.todos$.and.returnValue(of(mockResponse));
     component.form.setValue({ searchTerm: 'test' });
 
     component.onSubmit();
 
-    expect(mockDialogRef.close).toHaveBeenCalledWith(mockResults);
+    expect(mockDialogRef.close).toHaveBeenCalledWith(mockResponse);
   });
 });

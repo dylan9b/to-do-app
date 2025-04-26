@@ -78,7 +78,7 @@ describe('TodoSortModalComponent', () => {
     expect(mockStore.dispatch).toHaveBeenCalledWith(
       todosActions.updateFilters({ request: mockRequest })
     );
-    expect(mockDialogRef.close).toHaveBeenCalledWith(mockResponse.results);
+    expect(mockDialogRef.close).toHaveBeenCalledWith(mockResponse);
   });
 
   it('should not dispatch updateFilters if the form is invalid', () => {
