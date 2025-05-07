@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:to-do-app": "node dist/to-do-app/server/server.mjs",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "lighthouse": "http-server dist/to-do-app/browser --port 8080"
   },
   "private": true,
   "dependencies": {
