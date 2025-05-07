@@ -22,7 +22,7 @@ import {
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { TodoModel } from '../_model/todo.model';
 import { UpdateTodoRequestModel } from '../_model/request/update-todo-request.model';
 import { TodoModalFormControl } from './_model/todo-modal-form-control.model';
@@ -46,6 +46,7 @@ import { PriorityService } from '@services/priority.service';
     MatIconModule,
     MatDialogModule,
     MatSlideToggleModule,
+    NgClass,
   ],
   providers: [DatePipe],
   templateUrl: './todo-modal.component.html',

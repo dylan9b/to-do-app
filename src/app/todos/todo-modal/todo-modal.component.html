@@ -61,6 +61,10 @@
     <button
       class="w-full submit transition-all duration-500 ease-in-out p-4 rounded-[2rem] font-bold text-white bg-[var(--blue-dark)] hover:bg-white hover:text-[var(--blue-dark)] border-white border hover:border-[var(--blue-dark)] cursor-pointer"
       type="submit"
+      [ngClass]="{
+        'opacity-50 !cursor-not-allowed': form.invalid
+      }"
+      [disabled]="form.invalid"
     >
       Submit
     </button>

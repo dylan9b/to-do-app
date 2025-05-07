@@ -95,13 +95,11 @@ export class TodosComponent implements OnInit {
   ngOnInit(): void {
     this.loadItems$({ limit: 5, offset: this.offset })?.subscribe(
       (response) => {
-        if (response?.total && response?.results) {
-          this.totalTodosSignal.set(response.total);
-          this.todosSignal.set(response.results);
-          this.offset += 5;
+        this.totalTodosSignal.set(response.total);
+        this.todosSignal.set(response.results);
+        this.offset += 5;
 
-          this.isLoaded = true;
-        }
+        this.isLoaded = true;
       }
     );
     if (this._cookieService.get(SessionStorageEnum.GOOGLE_ACCESS_TOKEN)) {
