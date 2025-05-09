@@ -19,13 +19,13 @@ import { CookieService } from 'ngx-cookie-service';
 import { SessionStorageEnum } from '@shared/sessionStorage.enum';
 import { userActions } from '@state/user/user-actions';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { DecimalPipe, NgClass } from '@angular/common';
+import { DecimalPipe, JsonPipe, NgClass } from '@angular/common';
 import { Animations } from '../animations/animations';
 import { TodoRequestModel } from './_model/request/todo-request.model';
 import { TodoService } from '@services/todo.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TodoModel } from './_model/todo.model';
-import { Observable } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { todosActions } from '@state/todo/todo-actions';
 import { selectFilters } from '@state/todo/todo-selectors';
 
@@ -39,6 +39,7 @@ import { selectFilters } from '@state/todo/todo-selectors';
     TodoItemComponent,
     DecimalPipe,
     NgClass,
+    JsonPipe,
   ],
   templateUrl: './todos.component.html',
   styleUrl: './todos.component.scss',
@@ -75,10 +76,7 @@ export class TodosComponent implements OnInit {
     return isLimitReached;
   });
 
-  filters: Partial<TodoRequestModel> | null = {
-    isCompleted: null,
-    isPinned: null,
-  };
+  filters: Partial<TodoRequestModel> | null = null;
   offset = 0;
   isLoaded = false;
   readonly todosSignal = signal<TodoModel[]>([]);
@@ -115,11 +113,31 @@ export class TodosComponent implements OnInit {
 
       dialog
         .afterClosed()
-        .pipe(takeUntilDestroyed(this._destroyRef))
-        .subscribe((todo: TodoModel) => {
-          if (todo) {
-            this.todosSignal.set([todo, ...this.todosSignal()].slice(0, 5));
-            this.totalTodosSignal.set(this.totalTodosSignal() + 1);
+        .pipe(
+          takeUntilDestroyed(this._destroyRef),
+          switchMap(() => {
+            this.offset = 5;
+
+            return this.loadItems$({ limit: 5, offset: 0 });
+          })
+        )
+        .subscribe((response) => {
+          if (response) {
+            this.todosSignal.set(response.results);
+            this.totalTodosSignal.set(response.total);
+
+            this.filters = null;
+            this._store.dispatch(
+              todosActions.updateFilters({
+                request: {
+                  limit: 5,
+                  offset: 0,
+                  isCompleted: null,
+                  isPinned: null,
+                  searchTerm: null,
+                },
+              })
+            );
           }
         });
     });
